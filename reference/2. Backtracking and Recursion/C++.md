@@ -26,7 +26,7 @@ int main () {
 > TODO: update Xcode to get newer versions of g++.
 
 ```
-g++ -std=c++11 -O2 -Wall test.cpp -o test
+g++ -std=c++17 -O2 -Wall test.cpp -o test
 ```
 
 ## Stdio
