@@ -1,4 +1,4 @@
 *.in
 *.out
 *.pdf
-.vscode/*
+settings.json
