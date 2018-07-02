@@ -1,17 +1,19 @@
-/* A number is called superprime if it is prime and every number obtained by chopping some number of digits from the right side
-of the decimal expansion is prime. For example, 233 is a superprime, because 233, 23, and 2 are all prime. Print a list of all
-the superprime numbers of length n, for n <= 9. The number 1 is not a prime.
-
-For this problem, use depth first search, since all the answers are going to be at the nth level (the bottom level) of the search. */
+/*
+ID: aryaman4
+TASK: sprime
+LANG: C++14
+*/
 
 #include <iostream>
+#include <fstream>
 #include <vector>
+#include <set>
 #include <cmath>
 #include <string>
 
 using namespace std;
 
-vector<int> ans;
+set<int> ans;
 int target;
 
 bool is_prime (int n)
@@ -35,7 +37,7 @@ int search(int n) {
     string s = to_string(n);
     if (s.length() == target) {
         if (is_prime(n)) {
-            ans.push_back(n);
+            ans.insert(n);
             return 0;
         }
     }
@@ -47,15 +49,17 @@ int search(int n) {
         }
         s.pop_back();
     }
+    return 0;
 }
 
 int main() {
-    cin >> target;
-    if (target > 0) {
-        for (int x = 0; x <= 9; x++) search(x);
-    }
+    ifstream fin("sprime.in");
+    fin >> target;
+    vector<int> primes = {2, 3, 5, 7};
+    for (auto x : primes) search(x);
+    ofstream fout("sprime.out");
     for (auto x : ans) {
-        cout << x << "\n";
+        fout << x << "\n";
     }
     return 0;
 }
