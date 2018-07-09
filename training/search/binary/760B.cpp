@@ -5,15 +5,6 @@ using namespace std;
 int main() {
     long long n = 0, m = 0, c = 0;
     cin >> n >> m >> c;
-    // i give up
-    if (n == 100000000 and m == 993180275 and c == 362942) {
-        cout << "29887\n";
-        return 0;
-    }
-    if (n == 100000000 and m == 999834114 and c == 93836827) {
-        cout << "29998\n";
-        return 0;
-    }
 
     long long ans = 0;
 
