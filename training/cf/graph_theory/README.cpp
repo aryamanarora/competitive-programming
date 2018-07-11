@@ -2,7 +2,7 @@
 
 using namespace std;
 
-class undirected_graph {
+class Undirected_graph {
     int n; // number of vertices
     list<int> *adj; // adjacency list
 
@@ -12,8 +12,12 @@ class undirected_graph {
     }
 };
 
-undirected_graph::graph(int n)
-{
+Undirected_graph::Undirected_graph (int n) {
     this->n = n;
-    adj = new list<int>[n];
+    this->adj = new list<int>[n];
+}
+
+Undirected_graph::add_edge (int u, int v) {
+    adj[v].push_back(u);
+    adj[u].push_back(v);
 }

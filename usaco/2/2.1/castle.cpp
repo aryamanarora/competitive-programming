@@ -114,6 +114,8 @@ int main() {
     fout << *max_element(sizes.begin(), sizes.end()) << "\n";
 
     Wall ans;
+    ans.x = 10e9;
+    ans.y = 10e9;
     ans.size = 0;
     for (int y = h - 1; y >= 0; y--) {
         for (int x = 0; x < w; x++) {
@@ -121,18 +123,18 @@ int main() {
             if (y != 0) {
                 int a = get_size(sizes, i, i - w);
                 if (a > ans.size) ans = {x + 1, y + 1, a, "N"};
+                else if (a == ans.size) {
+                    if (x + 1 < ans.x) ans = {x + 1, y + 1, a, "N"};
+                    else if (x + 1 == ans.x and y + 1 > ans.y) ans = {x + 1, y + 1, a, "N"};
+                }
             }
             if (x != w - 1) {
                 int a = get_size(sizes, i, i + 1);
                 if (a > ans.size) ans = {x + 1, y + 1, a, "E"};
-            }
-            if (x != 0) {
-                int a = get_size(sizes, i, i - 1);
-                if (a > ans.size) ans = {x + 1, y + 1, a, "W"};
-            }
-            if (y != h - 1) {
-                int a = get_size(sizes, i, i + w);
-                if (a > ans.size) ans = {x + 1, y + 1, a, "S"};
+                else if (a == ans.size) {
+                    if (x + 1 < ans.x) ans = {x + 1, y + 1, a, "E"};
+                    else if (x + 1 == ans.x and y + 1 > ans.y) ans = {x + 1, y + 1, a, "E"};
+                }
             }
         }
     }

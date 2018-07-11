@@ -34,6 +34,7 @@ int main() {
             current_length++;
         }
     }
+    length.pb(current_length);
     cout << count << "\n";
     for (auto x : length) cout << x << " ";
     cout << "\n";
