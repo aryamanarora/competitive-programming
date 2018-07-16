@@ -1,41 +1,39 @@
 #include <iostream>
 #include <algorithm>
+#include <queue>
+#include <string>
+#include <bitset>
 
 using namespace std;
 
-int ans = 1000000000;
-int n, m;
-int t = 0;
+int main() {
+    int ans = 0;
+    int n, m;
+    cin >> n >> m;
+    queue<int> bfs;
+    bfs.push(n);
 
-int search(int a, bool op) {
-    cout << a << "\n";
-    if (a >= 2 * m) {
-        ans = min(ans, t + (a - m));
-        t--;
-        return 0;
-    }
-    else if (a == m) {
-        ans = min(ans, t);
-        return 0;
-    }
-
-    if (op == true) {
-        t++;
-        search(a * 2, true);
-        search(a * 2, false);
+    if (n >= m) {
+        ans = n - m;
     }
     else {
-        t++;
-        search(a - 1, true);
-        search(a - 1, false);
+        int traversed = 0;
+        while (!bfs.empty()) {
+            int x = bfs.front();
+            bfs.pop();
+            traversed++;
+            if (x == m) {
+                for (int i = 1; traversed > 0; i *= 2) {
+                    traversed -= i;
+                    ans++;
+                }
+                ans--;
+                break;
+            }
+            bfs.push(x * 2);
+            bfs.push(x - 1);
+        }
     }
-}
-
-int main() {
-    cin >> n >> m;
-
-    search(n, true);
-    search(n, false);
 
     cout << ans << "\n";
 }
