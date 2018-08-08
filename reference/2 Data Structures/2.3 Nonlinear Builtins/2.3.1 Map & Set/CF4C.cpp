@@ -6,11 +6,7 @@ typedef long long ll;
 typedef long double ld;
 typedef complex<ld> cd;
 
-typedef pair<int, int> ii;
-typedef tuple<int, int, int> iii;
-
 typedef vector<int> vi;
-typedef vector<ii> vii;
 typedef vector<ld> vd;
 typedef vector<ll> vl;
  
@@ -22,4 +18,15 @@ typedef vector<ll> vl;
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
+    int n;
+    cin >> n;
+    map<string, int> a;
+    string s;
+    for (int i = 0; i < n; i++) {
+        cin >> s;
+        a[s]++;
+        if (a[s] == 1) cout << "OK" << endl;
+        else cout << s << a[s] - 1 << endl;
+    }
 }

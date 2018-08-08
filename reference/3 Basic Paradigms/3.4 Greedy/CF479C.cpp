@@ -19,7 +19,23 @@ typedef vector<ll> vl;
 #define f first
 #define s second
 
+#define MAX 5000
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
+    int n = 0;
+    cin >> n;
+    ii x[MAX];
+    for (int i = 0; i < n; i++) {
+        cin >> x[i].f >> x[i].s;
+    }
+    sort(begin(x), begin(x) + n);
+    int day = 0;
+    for (int i = 0; i < n; i++) {
+        if (min(x[i].f, x[i].s) >= day) day = min(x[i].f, x[i].s);
+        else day = max(x[i].f, x[i].s);
+    }
+    cout << day << endl;
 }

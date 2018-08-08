@@ -22,4 +22,19 @@ typedef vector<ll> vl;
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
+    int n, t, c;
+    cin >> n >> t >> c;
+
+    int ans = 0, seq = 0;
+    for (int i = 0; i < n; i++) {
+        int a;
+        cin >> a;
+        if (a <= t) seq++;
+        else {
+            if (seq >= c) ans += (seq - c) + 1;
+            seq = 0;
+        }
+    }
+    cout << ans << endl;
 }
