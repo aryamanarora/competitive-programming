@@ -19,6 +19,33 @@ typedef vector<ll> vl;
 #define f first
 #define s second
 
+inline namespace graph {
+    struct undirected_graph_list {
+        unsigned long V; // vertices
+        unsigned long E; // edges
+        vector<vector<int>> list; // adjacency list
+
+        undirected_graph_list(int _V) {
+            V = _V;
+            list.resize(V);
+            E = 0;
+        }
+
+        void add_edge(int i, int j) {
+            list[i].push_back(i);
+            list[j].push_back(j);
+        }
+        void add_vertices(int _V) {
+            V += _V;
+            list.resize(list.size() + _V);
+        }
+        void is_edge(int i, int j) {
+            if (list[i].find(j) != list[i].end()) return true;
+            else return false;
+        }
+    };
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);

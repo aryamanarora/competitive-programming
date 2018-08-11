@@ -45,7 +45,7 @@ struct Polygon {
         }
     };
 
-    bool encloses(Point<T> point) {
+    bool contains(Point<T> point) {
         int i, j, nvert = p.size();
         bool c = false;
 

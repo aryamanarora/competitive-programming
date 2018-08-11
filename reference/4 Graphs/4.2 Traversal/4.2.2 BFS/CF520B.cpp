@@ -10,29 +10,19 @@ int main() {
     int ans = 0;
     int n, m;
     cin >> n >> m;
-    queue<int> bfs;
-    bfs.push(n);
 
-    if (n >= m) {
-        ans = n - m;
-    }
-    else {
-        int traversed = 0;
-        while (!bfs.empty()) {
-            int x = bfs.front();
-            bfs.pop();
-            traversed++;
-            if (x == m) {
-                for (int i = 1; traversed > 0; i *= 2) {
-                    traversed -= i;
-                    ans++;
-                }
-                ans--;
-                break;
-            }
-            bfs.push(x * 2);
-            bfs.push(x - 1);
+    while (m > n) {
+        if (m % 2) {
+            m--;
+            ans++;
         }
+        else {
+            m /= 2;
+            ans++;
+        }
+    }
+    if (n >= m) {
+        ans += n - m;
     }
 
     cout << ans << "\n";

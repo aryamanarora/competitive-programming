@@ -26,11 +26,10 @@ int main() {
     string a, b;
     getline(cin, a);
     getline(cin, b);
-    vector<bool> okay(n);
+    vector<bool> okay(n, false);
 
     int ans = 0;
     for (int i = 0; i < n; i++) {
-        okay[i] = false;
         if (a[i] == b[i]) okay[i] = true;
         else if (a[i] == a[n-i-1] and b[i] == b[n-i-1]) {
             if (i != (n - i - 1)) okay[i] = true;
