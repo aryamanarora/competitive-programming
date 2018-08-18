@@ -20,28 +20,40 @@ typedef vector<ll> vl;
 #define s second
 
 inline namespace graph {
-    struct undirected_graph_list {
+    struct unweighted_graph {
         unsigned long V; // vertices
         unsigned long E; // edges
         vector<vector<int>> list; // adjacency list
 
-        undirected_graph_list(int _V) {
+        unweighted_graph(int _V) {
             V = _V;
-            list.resize(V);
+            list.resize(V + 1);
             E = 0;
         }
-
-        void add_edge(int i, int j) {
-            list[i].push_back(i);
-            list[j].push_back(j);
-        }
+        virtual void add_edge(int i, int j) = 0;
         void add_vertices(int _V) {
             V += _V;
             list.resize(list.size() + _V);
         }
-        void is_edge(int i, int j) {
-            if (list[i].find(j) != list[i].end()) return true;
+        bool is_edge(int i, int j) {
+            if (find(list[i].begin(), list[i].end(), j) != list[i].end()) return true;
             else return false;
+        }
+    };
+    struct undirected_unweighted_graph : public unweighted_graph {
+        undirected_unweighted_graph(int _V) : unweighted_graph(_V) {
+        }
+        void add_edge(int i, int j) {
+            list[i].push_back(j);
+            list[j].push_back(i);
+        }
+    };
+
+    struct directed_unweighted_graph : public unweighted_graph {
+        directed_unweighted_graph(int _V) : unweighted_graph(_V) {
+        }
+        void add_edge(int i, int j) {
+            list[i].push_back(j);
         }
     };
 }
