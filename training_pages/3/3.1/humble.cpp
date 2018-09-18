@@ -1,6 +1,6 @@
 /*
 ID: aryaman4
-TASK: inflate
+TASK: humble
 LANG: C++14
 */
 
@@ -32,8 +32,28 @@ int main() {
     ifstream fin("humble.in");
     ofstream fout("humble.out");
 
-    int k = 0, n;
+    int k = 0, n = 0, a;
     fin >> k >> n;
-    vi primes(k);
-    for (int i = 0; i < k; i++) fin >> primes[i];
+
+    map<int, ll> primes;
+    vi humble;
+    for (int i = 0; i < k; i++) {
+        fin >> a;
+        primes[a] = 0;
+    }
+    humble.pb(1);
+
+    while (humble.size() != n + 1) {
+        ll minhumble = numeric_limits<ll>::max();
+        for (auto &x : primes) {
+            while (x.f * humble[x.s] <= humble.back()) x.s++;
+            minhumble = min(static_cast<ll>(x.f * humble[x.s]), minhumble);
+        }
+        humble.pb(minhumble);
+    }
+
+    fout << humble.back() << endl;
+
+    fin.close();
+    fout.close();
 }
