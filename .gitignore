@@ -3,3 +3,4 @@
 *.pdf
 settings.json
 *Unsorted/
+.DS_Store

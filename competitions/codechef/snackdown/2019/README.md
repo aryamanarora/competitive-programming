@@ -1,0 +1,1 @@
+My teammate was [Gural Nuriyev](https://www.codechef.com/users/guraltoo). Only my own code is here.
