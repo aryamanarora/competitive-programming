@@ -37,37 +37,39 @@ int main() {
     ifstream fin("kimbits.in");
     ofstream fout("kimbits.out");
 
-    int n, l, i;
+    ll n, l, i;
     fin >> n >> l >> i;
-    if (i == 1) {
-        fout << string(n, '0') << endl;
-        return 0;
-    }
-
-    queue<seq> q;
-    q.push({1, 1, 1});
-    int pos = 1; seq cur;
-
-    while (!q.empty()) {
-        try {
-            cur = q.front();
-            q.pop();
-            pos++;
-            if (pos == i) {
-                string a = bitset<32>(cur.seq).to_string();
-                for (int i = 32 - n; i < 32; i++) fout << a[i];
-                fout << endl;
-                return 0;
-            }
-            if (cur.len < n) {
-                q.push({(cur.seq << 1), cur.ones, cur.len + 1});
-                if (cur.ones < l) q.push({(cur.seq << 1) + 1, cur.ones + 1, cur.len + 1});
+    i--;
+    vector<vi> dp(l + 1, vi(n + 1, 0));
+    dp[0][0] = 1;
+    for (int x = 0; x <= l; x++) {
+        for (int y = x; y <= n; y++) {
+            if (y > 0) {
+                dp[x][y] += dp[x][y - 1];
+                if (x > 0) dp[x][y] += dp[x - 1][y - 1];
             }
         }
-        catch (exception &e) {
-            cout << q.size() << endl << e.what() << endl;
+    }
+    for (int x = 1; x <= l; x++) {
+        for (int y = x; y <= n; y++) {
+            dp[x][y] += dp[x - 1][y];
         }
     }
+
+    int ones = l;
+    for (int bit = n; bit > 0; bit--) {
+        cout << i << ": " << bit << " " << ones << " " << dp[ones][bit - 1] << endl;
+        ones = min(ones, bit - 1);
+        if (dp[ones][bit - 1] > i) {
+            fout << 0;
+        }
+        else {
+            fout << 1;
+            i -= dp[ones][bit - 1];
+            ones--;
+        }
+    }
+    fout << endl;
 
     fin.close();
     fout.close();
