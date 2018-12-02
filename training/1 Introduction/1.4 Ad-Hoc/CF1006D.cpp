@@ -1,7 +1,4 @@
-#include <vector>
-#include <complex>
-#include <iostream>
-#include <algorithm>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -9,7 +6,11 @@ typedef long long ll;
 typedef long double ld;
 typedef complex<ld> cd;
 
+typedef pair<int, int> ii;
+typedef tuple<int, int, int> iii;
+
 typedef vector<int> vi;
+typedef vector<ii> vii;
 typedef vector<ld> vd;
 typedef vector<ll> vl;
  
@@ -21,24 +22,30 @@ typedef vector<ll> vl;
 int main() {
     int n = 0;
     cin >> n;
-    string trash;
-    getline(cin, trash);
     string a, b;
-    getline(cin, a);
-    getline(cin, b);
+    cin >> a >> b;
     vector<bool> okay(n, false);
 
     int ans = 0;
-    for (int i = 0; i < n; i++) {
-        if (a[i] == b[i]) okay[i] = true;
-        else if (a[i] == a[n-i-1] and b[i] == b[n-i-1]) {
-            if (i != (n - i - 1)) okay[i] = true;
+    for (int i = 0; i < n / 2; i++) {
+        map<char, int> x;
+        x[a[i]]++;
+        x[a[n - i - 1]]++;
+        x[b[i]]++;
+        x[b[n - i - 1]]++;
+        if (x.size() == 3) {
+            if (a[i] == a[n - i - 1]) ans += 2;
+            else ans++;
         }
-        else if (a[i] == b[n-i-1] and b[i] == a[n-i-1]) okay[i] = true;
-        if (!okay[i]) {
-            a[i] = b[i];
-            ans++;
+        else if (x.size() == 4) {
+            ans += 2;
         }
+        else if (x.size() == 2) {
+            if ((*x.begin()).s != 2) ans++;
+        }
+    }
+    if (n % 2) {
+        if (a[n / 2] != b[n / 2]) ans++;
     }
     cout << ans << "\n";
 }
