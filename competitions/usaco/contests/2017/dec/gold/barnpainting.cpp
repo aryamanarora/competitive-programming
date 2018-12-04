@@ -59,23 +59,11 @@ int main() {
         g[a].pb(b);
         g[b].pb(a);
     }
-    set<int> coloured;
     for (int i = 0; i < k; i++) {
         fin >> a >> b;
         a--; b--;
         dp[a] = {0, 0, 0};
         dp[a][b] = 1;
-        coloured.insert(a);
-    }
-
-    for (auto v : coloured) {
-        for (int i = 0; i < 3; i++) {
-            if (dp[v][i]) {
-                for (auto u : g[v]) {
-                    dp[u][i] = 0;
-                }
-            }
-        }
     }
     
     vector<bool> visited(n, false);
