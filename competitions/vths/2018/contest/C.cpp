@@ -23,20 +23,22 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    string s;
-    cin >> s;
-    int n = s.length();
-    vector<vi> pos(10);
-    for (int i = 0; i < n; i++) pos[s[i] - '0'].pb(i);
-    vii dp(n, {0, -1});
-    dp[0] = {(pos[s[0] - '0'].back() == 0 ? 1 : 2), pos[s[0] - '0'].back()};
-    pos[s[0]].pop_back();
-    for (int i = 1; i < n; i++) {
-        if (pos[s[i]].size()) {
-            int res = 1, poss;
-            for (int j = 0; j < i; j++) {
-                
+    int a, b, c, l;
+    cin >> a >> b >> c >> l;
+    int ct = 0;
+    for (int i = 0; i <= l / a; i++) {
+        for (int j = 0; j <= l / b; j++) {
+            for (int k = 0; k <= l / c; k++) {
+                if (i * a + j * b + k * c == l) {
+                    cout << i << " " << j << " " << k << endl;
+                    ct++;
+                }
             }
         }
     }
+    if (ct == 0) cout << "impossible" << endl;
 }
+
+/*
+USE LONG LONG!!!!
+*/

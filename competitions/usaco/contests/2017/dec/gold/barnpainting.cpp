@@ -27,11 +27,11 @@ typedef vector<ll> vl;
 
 const ll MOD = 1000000007;
 
-void dfs(int v, int last, vector<vi> &g, vector<bool> &visited, vector<array<ll, 4>> &dp) {
+void dfs(int v, vector<vi> &g, vector<bool> &visited, vector<array<ll, 4>> &dp) {
     visited[v] = true;
     for (int u : g[v]) {
         if (!visited[u]) {
-            dfs(u, v, g, visited, dp);
+            dfs(u, g, visited, dp);
             dp[v][0] *= ((dp[u][1] + dp[u][2]) % MOD);
             dp[v][0] %= MOD;
             dp[v][1] *= ((dp[u][0] + dp[u][2]) % MOD);
@@ -67,7 +67,7 @@ int main() {
     }
     
     vector<bool> visited(n, false);
-    dfs(0, -1, g, visited, dp);
+    dfs(0, g, visited, dp);
 
     fout << (dp[0][0] + dp[0][1] + dp[0][2]) % MOD << endl;
 }
