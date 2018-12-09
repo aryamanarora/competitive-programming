@@ -59,17 +59,21 @@ int main() {
     priority_queue<ii> q;
     for (auto x : degree) q.push({x.s, x.f});
 
+    set<int> ans;
     for (int i = 0; i < p; i++) {
         if (q.top().f == 0) break;
         while (q.top().f != degree[q.top().s]) {
             if (degree[q.top().s] != 0) q.push({degree[q.top().s], q.top().s});
             q.pop();
         }
-        fout << q.top().s << " ";
+        ans.insert(q.top().s);
         for (auto v : g[q.top().s]) degree[v]--;
         degree[q.top().s] = 0;
         q.pop();
     }
+
+    for (auto x : ans) fout << x << " ";
+    fout << endl;
 }
 
 /*
