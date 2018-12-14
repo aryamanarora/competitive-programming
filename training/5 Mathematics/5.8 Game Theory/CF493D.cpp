@@ -23,10 +23,13 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream fin("mootube.in");
-    ofstream fout("mootube.out");
-    int n, q;
-    fin >> n >> q;
+    int n;
+    cin >> n;
+    if (n % 2) {
+        cout << "black" << endl;
+        return 0;
+    }
+    cout << "white" << endl << "1 2" << endl;
 }
 
 /*

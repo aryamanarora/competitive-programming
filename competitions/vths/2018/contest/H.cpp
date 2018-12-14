@@ -48,12 +48,8 @@ int main() {
     getline(cin, check);
     // for (auto x : verify) cout << x.s;
     // cout << endl;
-    vector<vi> dp(26, vi(n));
-    for (int i = 0; i < n; i++) {
-        for (char j = 'a'; j <= 'z'; j++) {
-
-        }
-    }
+    
+    
 }
 
 /*

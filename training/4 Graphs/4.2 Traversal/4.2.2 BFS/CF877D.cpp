@@ -23,10 +23,8 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream fin("mootube.in");
-    ofstream fout("mootube.out");
-    int n, q;
-    fin >> n >> q;
+    int n, m, k;
+    cin >> n >> m >> k;
 }
 
 /*

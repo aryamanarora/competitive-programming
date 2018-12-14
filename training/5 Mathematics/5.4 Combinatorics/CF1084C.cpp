@@ -19,14 +19,27 @@ typedef vector<ll> vl;
 #define f first
 #define s second
 
+const ll MOD = (ll) 1e9 + 7;
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream fin("mootube.in");
-    ofstream fout("mootube.out");
-    int n, q;
-    fin >> n >> q;
+    string s;
+    cin >> s;
+    ll ans = 1;
+    int ct = 0;
+    for (auto c : s) {
+        if (c == 'a') ct++;
+        else if (c == 'b' and ct != 0) {
+            ans *= (ct + 1);
+            ans %= MOD;
+            ct = 0;
+        }
+    }
+    ans *= (ct + 1);
+    ans %= MOD;
+    cout << (ans + MOD - 1) % MOD << endl;
 }
 
 /*
