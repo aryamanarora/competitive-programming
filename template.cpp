@@ -19,45 +19,6 @@ typedef vector<ll> vl;
 #define f first
 #define s second
 
-inline namespace graph {
-    struct unweighted_graph {
-        unsigned long V; // vertices
-        unsigned long E; // edges
-        vector<vector<int>> list; // adjacency list
-
-        unweighted_graph(int _V) {
-            V = _V;
-            list.resize(V + 1);
-            E = 0;
-        }
-        virtual void add_edge(int i, int j) = 0;
-        void add_vertices(int _V) {
-            V += _V;
-            list.resize(list.size() + _V);
-        }
-        bool is_edge(int i, int j) {
-            if (find(list[i].begin(), list[i].end(), j) != list[i].end()) return true;
-            else return false;
-        }
-    };
-    struct undirected_unweighted_graph : public unweighted_graph {
-        undirected_unweighted_graph(int _V) : unweighted_graph(_V) {
-        }
-        void add_edge(int i, int j) {
-            list[i].push_back(j);
-            list[j].push_back(i);
-        }
-    };
-
-    struct directed_unweighted_graph : public unweighted_graph {
-        directed_unweighted_graph(int _V) : unweighted_graph(_V) {
-        }
-        void add_edge(int i, int j) {
-            list[i].push_back(j);
-        }
-    };
-}
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
