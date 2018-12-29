@@ -22,28 +22,18 @@ typedef vector<ll> vl;
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
-
-    int n, m, k;
-    cin >> n >> m >> k;
-    set<int> needed; int x;
-    for (int i = 0; i < k; i++) {
+    
+    int n, ans = 0;
+    cin >> n;
+    map<int, int> h; vi a(n);
+    for (auto &x : a) {
         cin >> x;
-        needed.insert(x);
+        if (h[x + 1] == 0) ans++;
+        else h[x + 1]--;
+        h[x]++;
     }
-
-    vector<pair<int, ii>> edges(m);
-    for (int i = 0; i < m; i++) cin >> edges[i].s.f >> edges[i].s.s >> edges[i].f;
-    sort(edges.begin(), edges.end());
-
-    for (int i = 0; i < m; i++) {
-        needed.erase(edges[i].s.f);
-        needed.erase(edges[i].s.s);
-        if (needed.empty()) {
-            for (int j = 0; j < k; j++) cout << edges[i].f << " ";
-            cout << endl;
-            return 0;
-        }
-    }
+    
+    cout << ans << endl;
 }
 
 /*
