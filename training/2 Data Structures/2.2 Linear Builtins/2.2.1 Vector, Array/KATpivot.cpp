@@ -13,15 +13,6 @@ typedef vector<int> vi;
 typedef vector<ii> vii;
 typedef vector<ld> vd;
 typedef vector<ll> vl;
-
-typedef set<int> si;
-typedef set<ii> sii;
-typedef set<ld> sd;
-typedef set<ll> sl;
-
-typedef map<int, int> mii;
-typedef priority_queue<int> pqi;
-typedef queue<int> qi;
  
 #define mp make_pair
 #define pb push_back
@@ -31,6 +22,28 @@ typedef queue<int> qi;
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+    
+    int n;
+    cin >> n;
+    vi a(n); set<int> left, right;
+    for (auto &x : a) {
+        cin >> x;
+        right.insert(x);
+    }
+
+    right.erase(a[0]);
+    int ct = 0;
+    if (*right.begin() > a[0]) ct++;
+    for (int i = 1; i < n - 1; i++) {
+        left.insert(a[i - 1]);
+        right.erase(a[i]);
+        if (*left.rbegin() < a[i] and a[i] < *right.begin()) ct++;
+    }
+    right.erase(a[n - 1]);
+    left.insert(a[n - 2]);
+    if (a[n - 1] > *left.rbegin()) ct++;
+
+    cout << ct << endl;
 }
 
 /*

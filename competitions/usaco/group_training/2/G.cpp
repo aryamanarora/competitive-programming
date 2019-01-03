@@ -28,13 +28,34 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
+const int MAX = 1001;
+const int MAX_SUM = 10001;
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
+    int n;
+    cin >> n;
+    vi a(n); for (auto &x : a) cin >> x;
+
+    vector<map<int, int>> a; // ways to sum to [y] at position [x];
 }
 
 /*
 USE LONG LONG!!!!
+
+  1 1 1 1
++ 0 1 2 6
+- 0 1 2 6
+
+  1 2 2 1
++ 0 0 1 2
+- 0 0 1 2
+
+  1 2 3
++ 0 0
+- 0 0
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

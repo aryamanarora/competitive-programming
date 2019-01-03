@@ -31,9 +31,39 @@ typedef queue<int> qi;
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
+    int n, k;
+    cin >> n >> k;
+    vl a(n); vi twos(n, 0), fives(n, 0);
+    for (auto &x : a) cin >> x;
+    for (int i = 0; i < n; i++) {
+        while (a[i] % 2 == 0) {
+            twos[i]++;
+            a[i] /= 2;
+        }
+        while (a[i] % 5 == 0) {
+            fives[i]++;
+            a[i] /= 5;
+        }
+    }
+
+    vii cur(k); int two = 0, five = 0;
+    for (int i = 0; i < k; i++) {
+        cur[i] = {twos[i], fives[i]};
+        two += twos[i]; five += fives[i];
+    }
+
+    for (int i = k; i < n; i++) {
+        // ???
+    }
 }
 
 /*
+15 16 3 25 9
+5 2*2*2*2  5*5
+
+
+
 USE LONG LONG!!!!
 
           .=     ,        =.

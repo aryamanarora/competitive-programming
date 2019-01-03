@@ -31,6 +31,23 @@ typedef queue<int> qi;
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
+    int n, d;
+    cin >> n >> d;
+    string s; vi dist(n, -1);
+    cin >> s;
+    dist[0] = 0;
+    for (int i = 0; i < n; i++) {
+        if (dist[i] != -1) {
+            for (int j = 1; j <= d and i + j < n; j++) {
+                if (s[i + j] != '0') {
+                    if (dist[i + j] == -1) dist[i + j] = dist[i] + 1;
+                    else dist[i + j] = min(dist[i + j], dist[i] + 1);
+                }
+            }
+        }
+    }
+    cout << dist[n - 1] << endl;
 }
 
 /*

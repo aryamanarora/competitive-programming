@@ -19,9 +19,6 @@ typedef vector<ll> vl;
 #define f first
 #define s second
 
-int n, m, c;
-vi a;
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
@@ -29,36 +26,42 @@ int main() {
     ifstream cin("convention.in");
     ofstream cout("convention.out");
 
-
+    int n, m, c;
     cin >> n >> m >> c;
-    if (m >= n) {
-        cout << 0 << endl;
-        return 0;
-    }
-
-    a.resize(n);
-    for (int i = 0; i < n; i++) cin >> a[i];
+    vi a(n);
+    for (auto &x : a) cin >> x;
     sort(a.begin(), a.end());
 
-    int ans = 0, start = 0, ct = 0;
-    for (int i = 0; i < n; i++) {
-        ct++;
-        if (ct == c) {
-            ans = max(ans, a[i] - a[start]);
-            start = i + 1;
-            ct = 0;
+    int lo = 0, hi = a[n - 1] - a[0], mid;
+    while (lo <= hi) {
+        mid = (lo + hi) / 2;
+        int buses = 1, last = a[0], cows = 0;
+        // cerr << mid << ": ";
+        for (auto &x : a) {
+            if (x - last > mid or cows == c) {
+                buses++;
+                last = x;
+                cows = 1;
+                // cerr << " | ";
+            }
+            else cows++;
+            // cerr << x << " ";
         }
+        // cerr << ": " << buses << endl;
+        if (buses > m) lo = mid + 1;
+        else hi = mid - 1;
     }
-    if (start != n) ans = max(ans, a[n - 1] - a[start]);
-    cout << ans << endl;
+
+    cout << lo << endl;
 }
 
 /*
-
-6: 1 1 3 4 10 14 0
-5:   1 3 4 10 14 0
-4:   1   4 10 14 1
-3:   1   
+1 1 3 4 10 14
+13: [1 1 3 4 10 14]
+12: [1 1 3 4 10][14]
+...
+8: [1 1 3 4][10 14]
+9: 
 
 USE LONG LONG!!!!
 

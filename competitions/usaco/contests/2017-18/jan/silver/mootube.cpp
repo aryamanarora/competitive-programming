@@ -19,14 +19,37 @@ typedef vector<ll> vl;
 #define f first
 #define s second
 
+int query(int u, int par, int k, vector<vii> &g) {
+    int res = 0;
+    for (auto v : g[u]) {
+        if (v.f != par and v.s >= k) res += (1 + query(v.f, u, k, g));
+    }
+    return res;
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream fin("mootube.in");
-    ofstream fout("mootube.out");
+    ifstream cin("mootube.in");
+    ofstream cout("mootube.out");
+
     int n, q;
-    fin >> n >> q;
+    cin >> n >> q;
+    vector<vii> g(n);
+    for (int i = 0, p, q, r; i < n - 1; i++) {
+        cin >> p >> q >> r;
+        p--; q--;
+        g[p].pb({q, r});
+        g[q].pb({p, r});
+    }
+
+    int k, v;
+    while (q--) {
+        cin >> k >> v;
+        v--;
+        cout << query(v, -1, k, g) << endl;
+    }
 }
 
 /*

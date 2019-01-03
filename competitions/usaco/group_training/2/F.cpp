@@ -31,6 +31,31 @@ typedef queue<int> qi;
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
+    int n, a, b;
+    cin >> n >> a >> b;
+    vi cur; int ans = 6;
+    for (int i = 0; i < 4; i++) cur.pb(a);
+    for (int i = 0; i < 2; i++) cur.pb(b);
+    sort(cur.begin(), cur.end());
+    
+    do {
+        vi m(6, n);
+        for (auto &x : cur) {
+            sort(m.begin(), m.end());
+            for (auto &y : m) {
+                if (y >= x) {
+                    y -= x;
+                    break;
+                }
+            }
+        }
+        int res = 0;
+        for (auto &x : m) if (x != n) res++;
+        ans = min(ans, res);
+    } while (next_permutation(cur.begin(), cur.end()));
+
+    cout << ans << endl;
 }
 
 /*

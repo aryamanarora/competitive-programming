@@ -31,6 +31,10 @@ typedef queue<int> qi;
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
+    int l, n, rf, rb;
+    cin >> l >> n >> rf >> rb;
+    for (int t = 0; t)
 }
 
 /*
