@@ -28,33 +28,57 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
+const int MAX = 5000;
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
+    int n, k;
+    cin >> n >> k;
+    vi a(n), colour(n, -1); for (auto &x : a) {cin >> x; x--;}
 
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+    vector<vector<bool>> used(MAX, vector<bool>(k, false));
+    vector<bool> seen(k);
+    for (int i = 0; i < MAX; i++) {
+        for (int j = 0; j < k; j++) {
+            if (!seen[j]) {
+                colour[i] = j;
+                seen[j] = true;
+                used[a[i]][j] = true;
+                break;
+            }
+        }
+        if (colour[i] == -1) {
+            for (int j = 0; j < k; j++) {
+                if (!used[a[i]][j]) {
+                    colour[i] = j;
+                    used[a[i]][j] = true;
+                    break;
+                }
+            }
+        }
+        if (colour[i] == -1) {
+            cout << "NO" << endl;
+            return 0;
+        }
     }
-    cout << ans << endl;
+    for (const auto &x : seen) {
+        if (!x) {
+            cout << "NO" << endl;
+            return 0;
+        }
+    }
+
+    cout << "YES" << endl;
+    for (auto &x : colour) cout << x + 1 << " ";
+    cout << endl;
 }
 
 /*
 USE LONG LONG!!!!
+
+
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

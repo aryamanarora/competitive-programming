@@ -31,26 +31,15 @@ typedef queue<int> qi;
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
-
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
-
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+  
+  	int n, k;
+  	cin >> n >> k;
+  	vi a(n); for (auto &x : a) cin >> x;
+  	vi dp(n, numeric_limits<int>::max()); dp[0] = 0;
+  	for (int i = 0; i < n; i++) {
+		for (int j = 1; j <= k and i + j < n; j++) dp[i + j] = min(dp[i + j], dp[i] + abs(a[i] - a[i + j]));
     }
-    cout << ans << endl;
+    cout << dp[n - 1] << endl;
 }
 
 /*

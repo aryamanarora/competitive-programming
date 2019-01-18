@@ -28,29 +28,45 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
+int ans = -1;
+
+void dfs(int pos, int b, vector<vector<bool>> &dp, vii &boots, vi &a) {
+    if (dp[pos][b] or a[pos] > boots[b].f) return;
+    if (pos == dp.size() - 1) ans = max(ans, b);
+    dp[pos][b] = true;
+    for (int i = 1; i <= boots[b].s and pos + i < a.size(); i++) if (a[pos + i] <= boots[b].f) dfs(pos + i, b, dp, boots, a);
+    for (; b >= 0; b--) if (a[pos] <= boots[b].f) dfs(pos, b, dp, boots, a);
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
-
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+    ifstream cin("snowboots.in");
+    ofstream cout("snowboots.out");
+    
+    int n, b;
+    cin >> n >> b;
+    vi a(n); for (auto &x : a) cin >> x;
+    vii boots;
+    for (int i = 0, s, d; i < b; i++) {
+        cin >> s >> d;
+        boots.pb({s, d});
     }
-    cout << ans << endl;
+    reverse(boots.begin(), boots.end());
+    boots.pb({0, 1});
+    
+    vector<vector<bool>> dp(n, vector<bool>(b + 1));
+    dfs(0, b, dp, boots, a);
+
+    /*
+    for (auto &x : dp) {
+        for (const bool &y : x) cerr << y << " ";
+        cerr << endl;
+    }
+    */
+
+   cout << b - (ans + 1) << endl;
 }
 
 /*

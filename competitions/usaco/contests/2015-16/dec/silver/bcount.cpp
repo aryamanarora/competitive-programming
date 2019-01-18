@@ -13,6 +13,7 @@ typedef vector<int> vi;
 typedef vector<ii> vii;
 typedef vector<ld> vd;
 typedef vector<ll> vl;
+typedef vector<bool> vb;
 
 typedef set<int> si;
 typedef set<ii> sii;
@@ -22,6 +23,8 @@ typedef set<ll> sl;
 typedef map<int, int> mii;
 typedef priority_queue<int> pqi;
 typedef queue<int> qi;
+
+typedef vector<vi> vvi;
  
 #define mp make_pair
 #define pb push_back
@@ -32,25 +35,30 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
+    ifstream cin("bcount.in");
+    ofstream cout("bcount.out");
 
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+    int n, q;
+    cin >> n >> q;
+    vector<array<int, 3>> prefixsum(n);
+    for (int i = 0, x; i < n; i++) {
+        cin >> x; x--;
+        prefixsum[i][x]++;
     }
-    cout << ans << endl;
+    for (int i = 1; i < n; i++) {
+        for (int j = 0; j < 3; j++) prefixsum[i][j] += prefixsum[i - 1][j];
+    }
+
+    for (int i = 0, a, b; i < q; i++) {
+        cin >> a >> b;
+        a--, b--;
+        for (int j = 0; j < 3; j++) {
+            if (a == 0) cout << prefixsum[b][j];
+            else cout << prefixsum[b][j] - prefixsum[a - 1][j];
+            if (j != 2) cout << " ";
+            else cout << endl;
+        }
+    }
 }
 
 /*

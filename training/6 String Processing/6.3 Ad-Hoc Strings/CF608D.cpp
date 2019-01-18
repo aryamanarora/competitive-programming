@@ -1,3 +1,5 @@
+// ITS WRONG USE DP
+
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -32,24 +34,46 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
+    int n;
+    cin >> n;
+    vi a(n); for (auto &x : a) cin >> x;
 
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+    int ans = 0;
+    while (a.size() > 0) {
+        int maxlen = 0, l, r;
+        ans++;
+        for (int i = 0; i < n; i++) {
+            int l1 = i, r1 = i;
+            for (int j = 1; i + j < n and i - j >= 0; j++) {
+                if (a[i + j] == a[i - j]) {
+                    l1--;
+                    r1++;
+                }
+                else break;
+            }
+            if (r1 - l1 + 1 > maxlen) {
+                maxlen = r1 - l1 + 1;
+                l = l1; r = r1;
+            }
+            
+            l1 = i + 1, r1 = i;
+            for (int j = 0; i + j + 1 < n and i - j >= 0; j++) {
+                if (a[i - j] == a[i + j + 1]) {
+                    l1--;
+                    r1++;
+                }
+                else break;
+            }
+            if (r1 - l1 + 1 > maxlen) {
+                maxlen = r1 - l1 + 1;
+                l = l1; r = r1;
+            }
+        }
+
+        a.erase(a.begin() + l, a.begin() + r + 1);
+        n = a.size();
     }
+
     cout << ans << endl;
 }
 

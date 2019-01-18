@@ -32,24 +32,41 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
+    ifstream cin("248.in");
+    ofstream cout("248.out");
 
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+    int n;
+    cin >> n;
+    vi a(n); for (auto &x : a) cin >> x;
+
+    vector<vi> memo(n, vi(n, -1));
+
+    int ans = 0;
+
+    function<int(int, int)> dp = [&](int i, int j) {
+        if (memo[i][j] != -1) return memo[i][j];
+        if (i == j) {
+            memo[i][j] = a[i];
+            ans = max(ans, a[i]);
+        }
+        else {
+            for (int k = i; k < j; k++) {
+                memo[i][j] = max(memo[i][j], (dp(i, k) == dp(k + 1, j) and dp(i, k) != 0 ? dp(i, k) + 1 : 0));
+            }
+            ans = max(ans, memo[i][j]);
+        }
+        return memo[i][j];
+    };
+
+    dp(0, n - 1);
+
+    /*
+    for (auto &x : memo) {
+        for (auto &y : x) cout << y << " ";
+        cout << endl;
     }
+    */
+
     cout << ans << endl;
 }
 

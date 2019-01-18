@@ -32,29 +32,44 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
-
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+    int n; string s;
+    cin >> n >> s;
+    int z = 0, o = 0, t = 0;
+    for (auto &x : s) {
+        if (x == '2') t++;
+        else if (x == '1') o++;
+        else z++;
     }
-    cout << ans << endl;
+
+    for (int i = 0; i < n; i++) {
+        if (s[i] == '2' and t > n / 3) {
+            if (z < n / 3) { s[i] = '0'; z++; }
+            else { s[i] = '1'; o++; }
+            t--;
+        }
+        else if (s[i] == '1' and o > n / 3) {
+            if (z < n / 3) { s[i] = '0'; z++; o--; }
+        }
+    }
+
+    for (int i = n - 1; i >= 0; i--) {
+        if (s[i] == '0' and z > n / 3) {
+            if (t < n / 3) { s[i] = '2'; t++; }
+            else { s[i] = '1'; o++; }
+            z--;
+        }
+        else if (s[i] == '1' and o > n / 3) {
+            if (t < n / 3) { s[i] = '2'; t++; o--; }
+        }
+    }
+
+    cout << s << endl;
 }
 
 /*
 USE LONG LONG!!!!
+
+
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

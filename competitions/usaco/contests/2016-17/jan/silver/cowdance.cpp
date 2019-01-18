@@ -32,24 +32,42 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
+    ifstream cin("cowdance.in");
+    ofstream cout("cowdance.out");
 
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+    int n, t;
+    cin >> n >> t;
+    vi a(n); for (auto &x : a) cin >> x;
+
+    auto check = [&](int k) -> bool {
+        priority_queue<int, vi, greater<int>> cows;
+        for (int i = 0; i < n; i++) {
+            if (cows.size() < k) cows.push(a[i]);
+            else {
+                cows.push(cows.top() + a[i]);
+                cows.pop();
+            }
+        }
+
+        int res;
+        while (!cows.empty()) {
+            res = cows.top();
+            cows.pop();
+        }
+        // cerr << res;
+        return (res <= t);
+    };
+
+    int lo = 1, hi = n; int ans = n;
+    while (lo <= hi) {
+        int mid = (hi + lo) / 2;
+        if (check(mid)) {
+            ans = min(ans, mid);
+            hi = mid - 1;
+        }
+        else lo = mid + 1;
     }
+
     cout << ans << endl;
 }
 

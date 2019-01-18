@@ -13,6 +13,7 @@ typedef vector<int> vi;
 typedef vector<ii> vii;
 typedef vector<ld> vd;
 typedef vector<ll> vl;
+typedef vector<bool> vb;
 
 typedef set<int> si;
 typedef set<ii> sii;
@@ -22,6 +23,8 @@ typedef set<ll> sl;
 typedef map<int, int> mii;
 typedef priority_queue<int> pqi;
 typedef queue<int> qi;
+
+typedef vector<vi> vvi;
  
 #define mp make_pair
 #define pb push_back
@@ -32,25 +35,17 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
-
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+    int n;
+    cin >> n;
+    map<string, int> pos;
+    for (int i = 0; i < n; i++) {
+        string s; cin >> s;
+        pos[s] = i;
     }
-    cout << ans << endl;
+    vector<pair<int, string>> a;
+    for (auto &x : pos) a.pb({x.s, x.f});
+    sort(a.rbegin(), a.rend());
+    for (auto &x : a) cout << x.s << endl;
 }
 
 /*
@@ -73,4 +68,9 @@ USE LONG LONG!!!!
        / |  ||   `""""~"`
      /'  |__||
            `o
+
+1-------
+       8
+---4
+--3
 */

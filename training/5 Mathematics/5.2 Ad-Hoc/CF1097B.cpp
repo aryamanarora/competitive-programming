@@ -28,29 +28,25 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
+int n, ans = 0;
+
+void dfs(int i, int tot, vi &a) {
+    if (i == n) {
+        if (tot == 0) ans++;
+        return;
+    }
+    dfs(i + 1, (tot + a[i]) % 360, a);
+    dfs(i + 1, (tot - a[i]) % 360, a);
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
-
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
-    }
-    cout << ans << endl;
+    cin >> n;
+    vi a(n); for (auto &x : a) cin >> x;
+    dfs(0, 0, a);
+    cout << (ans == 0 ? "NO" : "YES") << endl; 
 }
 
 /*

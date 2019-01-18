@@ -13,6 +13,7 @@ typedef vector<int> vi;
 typedef vector<ii> vii;
 typedef vector<ld> vd;
 typedef vector<ll> vl;
+typedef vector<bool> vb;
 
 typedef set<int> si;
 typedef set<ii> sii;
@@ -22,6 +23,8 @@ typedef set<ll> sl;
 typedef map<int, int> mii;
 typedef priority_queue<int> pqi;
 typedef queue<int> qi;
+
+typedef vector<vi> vvi;
  
 #define mp make_pair
 #define pb push_back
@@ -32,24 +35,35 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
-
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+    int n;
+    cin >> n;
+    vector<vii> g(n); vi add(n);
+    for (auto &x : add) cin >> x;
+    for (int i = 0, u, v, w; i < n - 1; i++) {
+        cin >> u >> v >> w;
+        u--; v--;
+        g[u].pb({v, w});
+        g[v].pb({u, w});
     }
+
+    ll ans = 0;
+    function<ll(int, int)> dfs = [&](int u, int p) -> ll {
+        ll f = 0, s = 0;
+        for (auto &v : g[u]) {
+            if (v.f == p) continue;
+            ll res = dfs(v.f, u) - v.s;
+            if (res > 0) {
+                if (res >= f) s = f, f = res;
+                else if (res > s) s = res;
+            }
+        }
+        // cout << u + 1 << ": " << f << " " << s << endl;
+        ans = max(ans, f + add[u] + s);
+        return f + add[u];
+    };
+
+    dfs(0, -1);
+
     cout << ans << endl;
 }
 

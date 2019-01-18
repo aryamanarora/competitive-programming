@@ -28,29 +28,28 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
+int n; vector<pair<int, ll>> a;
+
+ll dp(int i, int w, vector<vl> &memo) {
+    if (memo[i][w] != -1) return memo[i][w];
+    if (w == 0) memo[i][w] = 0;
+    else if (i == n) memo[i][w] = 0;
+    else if (a[i].f > w) memo[i][w] = dp(i + 1, w, memo);
+    else memo[i][w] = max(dp(i + 1, w, memo), a[i].s + dp(i + 1, w - a[i].f, memo));
+    return memo[i][w];
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
+    int w;
+    cin >> n >> w;
+    a.resize(n);
+    for (auto &x : a) cin >> x.f >> x.s;
+    vector<vl> memo(n + 1, vl(w + 1, -1));
 
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
-    }
-    cout << ans << endl;
+    cout << dp(0, w, memo) << endl;
 }
 
 /*

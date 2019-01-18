@@ -28,29 +28,48 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
+void solve() {
+    int n;
+    cin >> n;
+
+    vii events(n * 2);
+    for (int i = 0; i < n; i++) {
+        cin >> events[i * 2].f >> events[i * 2 + 1].f;
+        events[i * 2].s = -i - 1; events[i * 2 + 1].s = i + 1;
+    }
+    sort(events.begin(), events.end());
+
+    si cur;
+    vi colour(n); bool two = false, one = false;
+    for (auto &[t, id] : events) {
+        if (id < 0) {
+            if (cur.size() >= 1) colour[-id - 1] = colour[*cur.begin() - 1];
+            else if (cur.size() == 0) {
+                if (!two) {colour[-id - 1] = 2; two = true; }
+                else { colour[-id - 1] = 1; one = true; }
+            }
+            cur.insert(-id);
+        }
+        else {
+            cur.erase(id);
+        }
+    }
+
+    if (!one or !two) {
+        cout << -1 << endl;
+        return;
+    }
+    for (auto &x : colour) cout << x << " ";
+    cout << endl;
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
-
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
-    }
-    cout << ans << endl;
+    int t;
+    cin >> t;
+    while (t--) solve();
 }
 
 /*

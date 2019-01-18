@@ -32,24 +32,35 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
+    ifstream cin("maxcross.in");
+    ofstream cout("maxcross.out");
 
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+    int n, k, b;
+    cin >> n >> k >> b;
+
+    vector<bool> a(n, true);
+    for (int i = 0, x; i < b; i++) {
+        cin >> x;
+        x--;
+        a[x] = false;
     }
+
+    vi prefixsum(n, 0);
+    for (int i = 0; i < n; i++) {
+        if (i > 0) prefixsum[i] = prefixsum[i - 1];
+        if (!a[i]) prefixsum[i]++;
+        // cerr << prefixsum[i] << " ";
+    }
+    // cerr << endl;
+
+    int ans = prefixsum[k - 1];
+    // cerr << prefixsum[k - 1] << " ";
+    for (int i = k; i < n; i++) {
+        ans = min(ans, prefixsum[i] - prefixsum[i - k]);
+        // cerr << prefixsum[i] - prefixsum[i - k] << " ";
+    }
+    // cerr << endl;
+    
     cout << ans << endl;
 }
 

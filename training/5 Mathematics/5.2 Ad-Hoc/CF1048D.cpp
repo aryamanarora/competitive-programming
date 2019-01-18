@@ -1,3 +1,5 @@
+// ITS WRONG USE DP
+
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -28,33 +30,42 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
+ld ans = 0.0, ansd = 0.0;
+map<pair<ld, ld>, ld> memo;
+ld prob(ld w, ld b) {
+    cout << w << " " << b << endl;
+    if (w == 0.0 and b == 0.0) return 0.0;
+    else if (w == 0.0) return 0.0;
+    else if (b == 0.0) return 1.0;
+    if (memo.count({w, b})) return memo[{w, b}];
+
+    ld ans = (w / (b + w));
+    b--; // black is drawn
+    ld dragon = (b / (w + b)); // dragon draws black
+
+    // dragon black * black escape * probability now
+    ans += dragon * ((b - 1) / (w + b - 1)) * prob(w, b - 2);
+    ans += dragon * ((w - 1) / (w + b - 1)) * prob(w - 1, b - 1);
+    memo[{w, b}] = ans;
+    return memo[{w, b}];
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
-
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
-    }
-    cout << ans << endl;
+    int w, b;
+    cin >> w >> b;
+    cout << prob(w, b) << endl;
 }
 
 /*
 USE LONG LONG!!!!
+
+W:
+B:BB(B)
+  BB(W)
+
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

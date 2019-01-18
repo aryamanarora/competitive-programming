@@ -28,29 +28,49 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
+void solve(int n) {
+    vii dp(1440, {-8, -1});
+    for (int i = 0; i < n; i++) {
+        int t; double p;
+        cin >> t >> p;
+        dp[t].f += round(p * 100);
+    }
+
+    pair<int, ii> ans = {-100, {-1, -1}};
+    for (int i = 0; i < 1440; i++) {
+        dp[i].s = i;
+        if (i > 0) dp[i] = max(dp[i], {dp[i].f + dp[i - 1].f , dp[i - 1].s});
+        if (dp[i].f > ans.f) {
+            ans = {dp[i].f, {dp[i].s, i}};
+        }
+        else if (dp[i].f == ans.f) {
+            if (i - dp[i].s < ans.s.s - ans.s.f) {
+                ans = {dp[i].f, {dp[i].s, i}};
+            }
+            else if (i - dp[i].s == ans.s.s - ans.s.f) {
+                if (dp[i].s < ans.s.f) {
+                    ans = {dp[i].f, {dp[i].s, i}};
+                }
+            }
+        }
+    }
+
+    if (ans.f > 0.0) {
+        cout << fixed << setprecision(2) << static_cast<double>(ans.f) / 100.0 << " ";
+        cout << ans.s.f << " " << ans.s.s << endl;
+    }
+    else cout << "no profit" << endl;
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
-
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+    int n;
+    while (cin >> n) {
+        if (n == 0) break;
+        solve(n);
     }
-    cout << ans << endl;
 }
 
 /*

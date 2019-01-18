@@ -32,24 +32,37 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
+    ifstream cin("hps.in");
+    ofstream cout("hps.out");
 
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+    int n;
+    cin >> n;
+    string a;
+    for (int i = 0; i < n; i++) {
+        char c;
+        cin >> c;
+        a.pb(c);
     }
+
+    vector<vi> pre(n, vi(3)), suf(n, vi(3));
+    for (int i = 0; i < n; i++) {
+        pre[i][0] += (i > 0 ? pre[i - 1][0] : 0) + (a[i] == 'H');
+        pre[i][1] += (i > 0 ? pre[i - 1][1] : 0) + (a[i] == 'P');
+        pre[i][2] += (i > 0 ? pre[i - 1][2] : 0) + (a[i] == 'S');
+    }
+    for (int i = n - 1; i >= 0; i--) {
+        suf[i][0] += (i < n - 1 ? suf[i + 1][0] : 0) + (a[i] == 'H');
+        suf[i][1] += (i < n - 1 ? suf[i + 1][1] : 0) + (a[i] == 'P');
+        suf[i][2] += (i < n - 1 ? suf[i + 1][2] : 0) + (a[i] == 'S');
+    }
+
+    int ans = 0;
+    for (int i = 1; i < n; i++) {
+        for (int j = 0; j < 3; j++) {
+            for (int k = 0; k < 3; k++) ans = max(ans, pre[i - 1][j] + suf[i][k]);
+        }
+    }
+
     cout << ans << endl;
 }
 

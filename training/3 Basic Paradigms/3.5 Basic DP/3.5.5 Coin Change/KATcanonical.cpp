@@ -28,29 +28,50 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
+const int INF = numeric_limits<int>::max();
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
-
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
+    int n;
+    cin >> n;
+    vi a(n); int maxi = 0, maxi2 = 0;
     for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+        cin >> x;
+        if (x >= maxi) {
+            maxi2 = maxi;
+            maxi = x;
+        }
+        else maxi2 = max(x, maxi2);
     }
-    cout << ans << endl;
+    sort(a.rbegin(), a.rend());
+
+    int k = maxi + maxi2 + 1;
+    vi dp(k, INF);
+    dp[0] = 0;
+    for (int i = 1; i < k; i++) {
+        int greedy = 0, old_i = i;
+        for (auto &x : a) {
+            if (old_i >= x) {
+                greedy += (old_i / x);
+                old_i %= x;
+            }
+        }
+
+        for (auto &x : a) {
+            if (i >= x) dp[i] = min(dp[i - x] + 1, dp[i]);
+        }
+
+        // cout << i << ": " << greedy << " " << dp[i] << endl;
+
+        if (dp[i] != greedy) {
+            cout << "non-canonical" << endl;
+            return 0;
+        }
+    }
+
+    cout << "canonical" << endl;
 }
 
 /*

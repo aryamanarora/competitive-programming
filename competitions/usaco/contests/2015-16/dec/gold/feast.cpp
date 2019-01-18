@@ -13,6 +13,7 @@ typedef vector<int> vi;
 typedef vector<ii> vii;
 typedef vector<ld> vd;
 typedef vector<ll> vl;
+typedef vector<bool> vb;
 
 typedef set<int> si;
 typedef set<ii> sii;
@@ -22,6 +23,8 @@ typedef set<ll> sl;
 typedef map<int, int> mii;
 typedef priority_queue<int> pqi;
 typedef queue<int> qi;
+
+typedef vector<vi> vvi;
  
 #define mp make_pair
 #define pb push_back
@@ -32,23 +35,23 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
+    ifstream cin("feast.in");
+    ofstream cout("feast.out");
 
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+    int t, a, b;
+    cin >> t >> a >> b;
+    vector<bool> can_make(t + 1), can_half(t + 1);
+    can_make[0] = can_half[0] = true;
+    for (int i = 1; i <= t; i++) {
+        if (i >= a) if (can_half[i - a]) can_half[i] = true;
+        if (i >= b) if (can_half[i - b]) can_half[i] = true;
+        if (can_half[i]) can_make[i / 2] = true;
+    }
+    int ans = 0;
+    for (int i = 1; i <= t; i++) {
+        if (i >= a) if (can_make[i - a]) can_make[i] = true;
+        if (i >= b) if (can_make[i - b]) can_make[i] = true;
+        if (can_make[i]) ans = max(ans, i);
     }
     cout << ans << endl;
 }
@@ -73,4 +76,9 @@ USE LONG LONG!!!!
        / |  ||   `""""~"`
      /'  |__||
            `o
+
+1-------
+       8
+---4
+--3
 */

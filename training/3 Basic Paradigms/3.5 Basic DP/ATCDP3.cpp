@@ -32,25 +32,18 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
+    int n;
+    cin >> n;
+    vector<vi> a(n, vi(3));
+    for (auto &x : a) for (auto &y : x) cin >> y;
 
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
-    }
-    cout << ans << endl;
+    vector<vi> dp(n, vi(3));
+    dp[0] = a[0];
+    for (int i = 1; i < n; i++)
+        for (int j = 0; j < 3; j++)
+            for (int k = 0; k < 3; k++)
+                if (j != k) dp[i][j] = max(dp[i][j], a[i][j] + dp[i - 1][k]);
+    cout << max(dp[n - 1][0], max(dp[n - 1][1], dp[n - 1][2])) << endl;
 }
 
 /*

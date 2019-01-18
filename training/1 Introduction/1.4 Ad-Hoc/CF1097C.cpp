@@ -32,23 +32,42 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
+    int n;
+    cin >> n;
+    vii ct(n); map<int, int> l, r; int ok = 0;
+    for (int i = 0; i < n; i++) {
+        string s; cin >> s;
+        stack<char> st;
+        for (auto &c : s) {
+            if (c == '(') {
+                st.push(c);
+                ct[i].f++;
+            }
+            else if (c == ')') {
+                if (st.empty()) {
+                    st.push(c);
+                    ct[i].s++;
+                }
+                else if (st.top() == '(') {
+                    st.pop();
+                    ct[i].f--;
+                }
+                else {
+                    st.push(c);
+                    ct[i].s++;
+                }
+            }
+        }
+        if (ct[i].f == 0 and ct[i].s == 0) ok++;
+        else if (ct[i].f == 0) l[ct[i].s]++;
+        else if (ct[i].s == 0) r[ct[i].f]++;
+    }
 
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+    int ans = ok / 2;
+    // cout << ans << endl;
+    for (auto &x : l) {
+        ans += min(x.s, r[x.f]);
+        // cout << x.f << " " << ans << endl;
     }
     cout << ans << endl;
 }

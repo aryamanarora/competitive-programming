@@ -32,24 +32,40 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
-
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+    int n;
+    cin >> n;
+    vi b(n);
+    for (auto &x : b) cin >> x;
+    if (n <= 2) {
+        cout << 0 << endl;
+        return 0;
     }
+    
+    int ans = -1;
+
+    for (int k = -1; k <= 1; k++) {
+        for (int j = -1; j <= 1; j++) {
+            int ct = (abs(k) + abs(j)); bool okay = true;
+            vi a(b.begin(), b.end());
+            a[0] += k; a[1] += j;
+            for (int i = 2; i < n; i++) {
+                if ((a[i] - a[i - 1]) - (a[1] - a[0]) == 1) {
+                    ct++;
+                    a[i]--;
+                }
+                else if ((a[i] - a[i - 1]) - (a[1] - a[0]) == -1) {
+                    ct++;
+                    a[i]++;
+                }
+                else if (abs((a[i] - a[i - 1]) - (a[1] - a[0])) > 1) {
+                    okay = false;
+                    break;
+                }
+            }
+            if (okay) ans = (ans == -1 ? ct : min(ans, ct));
+        }
+    }
+
     cout << ans << endl;
 }
 

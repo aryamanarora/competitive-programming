@@ -32,25 +32,14 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
-
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+    int t;
+    cin >> t;
+    while (t--) {
+        int n, p, ct = 0;
+        cin >> n >> p;
+        for (int i = 1; i <= n and ct < 2 * n + p; i++)
+            for (int j = i + 1; j <= n and ct < 2 * n + p; j++, ct++) cout << i << " " << j << endl;
     }
-    cout << ans << endl;
 }
 
 /*

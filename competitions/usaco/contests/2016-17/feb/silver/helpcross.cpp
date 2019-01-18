@@ -32,24 +32,40 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
+    ifstream cin("helpcross.in");
+    ofstream cout("helpcross.out");
 
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+    int c, n;
+    cin >> c >> n;
+    vii events;
+    for (int i = 0, j; i < c; i++) {
+        cin >> j;
+        events.pb({j, 0});
     }
+    map<int, int> end;
+    for (int i = 0, j, k; i < n; i++) {
+        cin >> j >> k;
+        events.pb({j, -(i + 1)});
+        events.pb({k, i + 1});
+        end[i + 1] = k;
+    }
+    sort(events.begin(), events.end());
+
+    int ans = 0;
+    sii cows;
+    for (auto &x : events) {
+        if (x.s == 0) {
+            if (cows.size() != 0) {
+                cows.erase(cows.begin());
+                ans++;
+            }
+        }
+        else {
+            if (x.s < 0) cows.insert({end[-x.s], -x.s});
+            else cows.erase({end[x.s], x.s});
+        }
+    }
+
     cout << ans << endl;
 }
 

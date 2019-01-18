@@ -1,3 +1,9 @@
+/*
+ID: aryaman4
+TASK: fence
+LANG: C++14
+*/
+
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -32,25 +38,48 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
+    ifstream cin("fence.in");
+    ofstream cout("fence.out");
 
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+    int e; int n = 0;
+    cin >> e;
+    vector<multiset<int>> g;
+    for (int i = 0, u, v; i < e; i++) {
+        cin >> u >> v;
+        if (max(u, v) + 1 > n) {
+            n = max(u, v) + 1;
+            g.resize(n + 1);
+        }
+        g[u].insert(v);
+        g[v].insert(u);
     }
-    cout << ans << endl;
+
+    stack<int> st;
+    vi res;
+    int start = 1;
+    for (int i = 1; i <= n; i++) {
+        if (g[i].size() % 2) {
+            start = i;
+            break;
+        }
+    }
+    st.push(start);
+    while (!st.empty()) {
+        int u = st.top();
+        if (g[u].size() == 0) {
+            res.pb(u);
+            st.pop();
+        } 
+        else {
+            int v = *g[u].begin();
+            g[u].erase(g[u].find(v));
+            g[v].erase(g[v].find(u));
+            st.push(v);
+        }
+    }
+
+    reverse(res.begin(), res.end());
+    for (auto &x : res) cout << x << endl;
 }
 
 /*

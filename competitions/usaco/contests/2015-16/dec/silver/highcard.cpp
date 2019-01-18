@@ -13,6 +13,7 @@ typedef vector<int> vi;
 typedef vector<ii> vii;
 typedef vector<ld> vd;
 typedef vector<ll> vl;
+typedef vector<bool> vb;
 
 typedef set<int> si;
 typedef set<ii> sii;
@@ -22,6 +23,8 @@ typedef set<ll> sl;
 typedef map<int, int> mii;
 typedef priority_queue<int> pqi;
 typedef queue<int> qi;
+
+typedef vector<vi> vvi;
  
 #define mp make_pair
 #define pb push_back
@@ -32,24 +35,25 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
+    ifstream cin("highcard.in");
+    ofstream cout("highcard.out");
 
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
+    int n;
+    cin >> n;
+    si bessie;
+    for (int i = 1; i <= 2 * n; i++) bessie.insert(i);
+    vi a(n);
+    for (auto &x : a) { cin >> x; bessie.erase(x); }
+
+    int ans = 0;
     for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+        auto res = bessie.upper_bound(x);
+        if (res != bessie.end()) {
+            ans++;
+            bessie.erase(res);
+        }
     }
+
     cout << ans << endl;
 }
 

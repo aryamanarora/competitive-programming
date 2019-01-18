@@ -32,24 +32,22 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
+    string s;
+    cin >> s;
 
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
-    }
+    auto lb = s.find('[');
+    if (lb == string::npos) { cout << -1 << endl; return 0; }
+
+    auto lc = s.find(':', lb);
+    if (lc == string::npos) { cout << -1 << endl; return 0; }
+
+    auto rb = s.rfind(']');
+    if (rb == string::npos or rb < lb) { cout << -1 << endl; return 0; }
+
+    auto rc = s.rfind(':', rb);
+    if (rc == string::npos or rc <= lc) { cout << -1 << endl; return 0; }
+
+    int ans = 4 + static_cast<int>(count(s.begin() + lc, s.begin() + rc, '|'));
     cout << ans << endl;
 }
 

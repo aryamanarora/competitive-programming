@@ -32,25 +32,29 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
+    int n, m;
+    cin >> n >> m;
+    vector<vi> a(n, vi(m));
+    for (auto &x : a) for (auto &y : x) cin >> y;
 
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+    vector<vi> dp(n, vi(m, 1));
+    for (int i = 1; i < n; i++) {
+        for (int j = 0; j < m; j++) if (a[i][j] >= a[i - 1][j]) dp[i][j] = dp[i - 1][j] + 1;
     }
-    cout << ans << endl;
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) dp[i][0] = max(dp[i][0], dp[i][j]);
+    }
+
+    int q;
+    cin >> q;
+    while (q--) {
+        int t, b;
+        cin >> t >> b;
+        t -= 2; b--;
+        if (dp[b][0] >= b - t) cout << "Yes" << endl;
+        else cout << "No" << endl;
+    }
 }
 
 /*

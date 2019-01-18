@@ -1,3 +1,13 @@
+/*
+1/7 (thanks to @dolphingarlic)
+There are n<=3000 pies in a row, with pie i containing Ai grams of sugar.
+You also have m<=100 additional pies, with pie j containing Bj grams of sugar.
+You can insert any of the m pies from the second group anywhere in the line,
+but the relative order of the first group of pies must stay the same. You eat
+pies from left to right and you can't eat 2 consecutive pies. Maximize the amount
+of sugar you can obtain.
+*/
+
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -28,33 +38,46 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
+void dfs(int pos, vi &a, vi &b, vector<bool> &used) {
+
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("reststops.in");
-    ofstream cout("reststops.out");
+    int n, m;
+    cin >> n >> m;
+    vi a(n), b(m);
+    for (auto &x : a) cin >> x;
+    for (auto &x : b) cin >> x;
 
-    int l, n, rf, rb;
-    cin >> l >> n >> rf >> rb;
-    vector<pair<ll, int>> a(n);
-    for (auto &x : a) cin >> x.s >> x.f;
-    sort(a.rbegin(), a.rend());
-    ll pos = 0, t = 0; ll ans = 0;
-    for (auto &x : a) {
-        if (pos > x.s) continue;
-        ll tb = (x.s - pos) * rb;
-        ll tf = (x.s - pos) * rf;
-        // cout << x.f << " " << tf - tb << endl;
-        ans += (tf - tb) * x.f;
-        t += tf;
-        pos = x.s;
+    sort(b.begin(), b.end());
+    vi l(m, -1);
+    int pos = 1; bool flip = false;
+    for (int i = 0; i < m; i++) {
+        if (flip) {
+            l[pos] = b[i];
+            pos -= 2;
+        }
+        if (pos < m) { 
+            l[pos] = b[i];
+            pos += 2;
+        }
+        else {
+            for (pos = m - 1; pos >= 0; pos--) if (l[pos] == -1) break;
+            flip = true;
+        }
     }
-    cout << ans << endl;
+
+    for (auto &x : l) cout << x << " ";
+    cout << endl;
 }
 
 /*
 USE LONG LONG!!!!
+
+
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \
