@@ -28,46 +28,33 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
-struct disjoint_set {
-    int n;
-    vi parent;
-
-    disjoint_set(int N) : n(N), parent(N) {
-    }
-    void make_set(int v) {
-        parent[v] = v;
-    }
-    int find_set(int v) {
-        if (v == parent[v]) return v;
-        return parent[v] = find_set(parent[v]);
-    }
-    void make_union(int a, int b) {
-        a = find_set(a);
-        b = find_set(b);
-        if (b != a) {
-            parent[b] = a;
-        }
-    }
-};
+const int INF = numeric_limits<int>::max();
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int g, p;
-    cin >> g >> p;
-    vi a(p); for (auto &x : a) cin >> x;
-    
-    disjoint_set dsu(g + 1);
-    for (int i = 0; i <= g; i++) dsu.make_set(i);
-    int ct = 0;
-    for (auto &x : a) {
-        int s = dsu.find_set(x);
-        if (s == 0) break;
-        dsu.make_union(s - 1, s);
-        ct++;
+    int n, k;
+    cin >> n >> k;
+    string s;
+    cin >> s;
+
+    map<char, int> ct;
+    for (int i = 0; i < n;) {
+        bool work = true; int j;
+        for (j = 0; j < k; j++) {
+            if (s[i + j] != s[i]) {
+                work = false;
+                break;
+            }
+        }
+        if (work) ct[s[i]]++;
+        i += j;
     }
-    cout << ct << endl;
+
+    int ans = 0;
+    for (auto &x : ct) ans = max(ans, x.s);
+    cout << ans << endl;
 }
 
 /*

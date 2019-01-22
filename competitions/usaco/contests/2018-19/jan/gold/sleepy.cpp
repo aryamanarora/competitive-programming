@@ -28,49 +28,58 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
-struct disjoint_set {
-    int n;
-    vi parent;
-
-    disjoint_set(int N) : n(N), parent(N) {
-    }
-    void make_set(int v) {
-        parent[v] = v;
-    }
-    int find_set(int v) {
-        if (v == parent[v]) return v;
-        return parent[v] = find_set(parent[v]);
-    }
-    void make_union(int a, int b) {
-        a = find_set(a);
-        b = find_set(b);
-        if (b != a) {
-            parent[b] = a;
-        }
-    }
-};
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int g, p;
-    cin >> g >> p;
-    vi a(p); for (auto &x : a) cin >> x;
-    
-    disjoint_set dsu(g + 1);
-    for (int i = 0; i <= g; i++) dsu.make_set(i);
-    int ct = 0;
-    for (auto &x : a) {
-        int s = dsu.find_set(x);
-        if (s == 0) break;
-        dsu.make_union(s - 1, s);
-        ct++;
+    ifstream cin("sleepy.in");
+    ofstream cout("sleepy.out");
+
+    int n;
+    cin >> n;
+    vi a(n), pos(n); 
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+        a[i]--;
+        pos[a[i]] = i;
     }
-    cout << ct << endl;
+    vii seq;
+    function<bool(const int, const int)> cmp = [&](const int &a, const int &b) {
+        if (a < b) seq.pb({a, b});
+        return a < b;
+    };
+    sort(a.begin(), a.end(), cmp);
+
+    vi ans;
+    for (auto &x : seq) {
+        for (int i = 0; i < min(pos[x.f], pos[x.s]); i++) ans.pb(min(pos[x.f], pos[x.s]));
+        ans.pb(max(pos[x.f], pos[x.s]));
+        swap(pos[x.f], pos[x.s]);
+    }
+    cout << ans.size() << endl;
+    for (auto &x : ans) cout << x << " ";
+    cout << endl;
 }
 
 /*
+1 2 3
+
+1 3 2
+1 2
+
+2 1 3
+1
+
+2 3 1
+2 2
+
+3 1 2
+2
+
+3 2 1
+2 1
+
+
 USE LONG LONG!!!!
 
           .=     ,        =.

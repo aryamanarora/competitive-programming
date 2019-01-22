@@ -28,46 +28,29 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
-struct disjoint_set {
-    int n;
-    vi parent;
-
-    disjoint_set(int N) : n(N), parent(N) {
-    }
-    void make_set(int v) {
-        parent[v] = v;
-    }
-    int find_set(int v) {
-        if (v == parent[v]) return v;
-        return parent[v] = find_set(parent[v]);
-    }
-    void make_union(int a, int b) {
-        a = find_set(a);
-        b = find_set(b);
-        if (b != a) {
-            parent[b] = a;
-        }
-    }
-};
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int g, p;
-    cin >> g >> p;
-    vi a(p); for (auto &x : a) cin >> x;
-    
-    disjoint_set dsu(g + 1);
-    for (int i = 0; i <= g; i++) dsu.make_set(i);
-    int ct = 0;
-    for (auto &x : a) {
-        int s = dsu.find_set(x);
-        if (s == 0) break;
-        dsu.make_union(s - 1, s);
-        ct++;
+    string s;
+    cin >> s; int n = s.length();
+    if (s.size() == 1) {
+        cout << "No" << endl;
+        return 0;
     }
-    cout << ct << endl;
+
+    int ct = 0;
+    stack<char> st;
+    for (int i = 0; i < n; i++) {
+        if (st.empty()) st.push(s[i]);
+        else if (s[i] == st.top()) {
+            ct++;
+            st.pop();
+        }
+        else st.push(s[i]);
+    }
+
+    cout << (ct % 2 ? "Yes" : "No") << endl;
 }
 
 /*

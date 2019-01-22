@@ -28,46 +28,34 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
-struct disjoint_set {
-    int n;
-    vi parent;
-
-    disjoint_set(int N) : n(N), parent(N) {
-    }
-    void make_set(int v) {
-        parent[v] = v;
-    }
-    int find_set(int v) {
-        if (v == parent[v]) return v;
-        return parent[v] = find_set(parent[v]);
-    }
-    void make_union(int a, int b) {
-        a = find_set(a);
-        b = find_set(b);
-        if (b != a) {
-            parent[b] = a;
-        }
-    }
-};
+const int MOD = 1000000007;
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int g, p;
-    cin >> g >> p;
-    vi a(p); for (auto &x : a) cin >> x;
-    
-    disjoint_set dsu(g + 1);
-    for (int i = 0; i <= g; i++) dsu.make_set(i);
-    int ct = 0;
-    for (auto &x : a) {
-        int s = dsu.find_set(x);
-        if (s == 0) break;
-        dsu.make_union(s - 1, s);
-        ct++;
+    int n, l, r;
+    cin >> n >> l >> r;
+
+    int diff = r - l + 1;
+    vi ct = {diff / 3, diff / 3, diff / 3};
+    diff %= 3;
+    for (int i = l; i < l + diff; i++) {
+        ct[i % 3]++;
     }
-    cout << ct << endl;
+
+    vector<vl> dp(n, vl(3));
+    dp[0] = {ct[0], ct[1], ct[2]};
+    for (int i = 1; i < n; i++) {
+        for (int j = 0; j < 3; j++) {
+            for (int k = 0; k < 3; k++) {
+                dp[i][j] += dp[i - 1][k] * ct[(j + 3 - k) % 3];
+                dp[i][j] %= MOD;
+            }
+        }
+    }
+
+    cout << dp[n - 1][0] << endl;
 }
 
 /*

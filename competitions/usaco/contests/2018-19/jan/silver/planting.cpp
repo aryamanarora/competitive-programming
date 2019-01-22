@@ -28,46 +28,41 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
-struct disjoint_set {
-    int n;
-    vi parent;
-
-    disjoint_set(int N) : n(N), parent(N) {
-    }
-    void make_set(int v) {
-        parent[v] = v;
-    }
-    int find_set(int v) {
-        if (v == parent[v]) return v;
-        return parent[v] = find_set(parent[v]);
-    }
-    void make_union(int a, int b) {
-        a = find_set(a);
-        b = find_set(b);
-        if (b != a) {
-            parent[b] = a;
-        }
-    }
-};
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int g, p;
-    cin >> g >> p;
-    vi a(p); for (auto &x : a) cin >> x;
-    
-    disjoint_set dsu(g + 1);
-    for (int i = 0; i <= g; i++) dsu.make_set(i);
-    int ct = 0;
-    for (auto &x : a) {
-        int s = dsu.find_set(x);
-        if (s == 0) break;
-        dsu.make_union(s - 1, s);
-        ct++;
+    ifstream cin("planting.in");
+    ofstream cout("planting.out");
+
+    int n;
+    cin >> n;
+    vector<vi> g(n);
+    for (int i = 0, u, v; i < n - 1; i++) {
+        cin >> u >> v; u--, v--;
+        g[u].pb(v);
+        g[v].pb(u);
     }
-    cout << ct << endl;
+
+    vi colour(n, -1);
+    colour[0] = 0;
+    int ans = 0;
+
+    function<void(int, int)> dfs = [&](int u, int p) {
+        int c = 0;
+        for (int i = 0; i < g[u].size(); i++) {
+            int v = g[u][i];
+            if (v == p) continue;
+            while (c == colour[u] or c == colour[p]) c++;
+            colour[v] = c;
+            ans = max(ans, c);
+            dfs(v, u);
+            c++;
+        }
+    };
+
+    dfs(0, -1);
+    cout << ans + 1 << endl;
 }
 
 /*
