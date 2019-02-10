@@ -31,14 +31,27 @@ typedef queue<int> qi;
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
+    string s; int k;
+    cin >> s >> k;
+    vl val(26); for (auto &x : val) cin >> x;
+    ll maxi = *max_element(val.begin(), val.end());
+
+    ll ans = 0;
+    for (ll i = 1; i <= s.length(); i++) {
+        // cout << i * val[s[i - 1] - 'a'] << endl;
+        ans += i * val[s[i - 1] - 'a'];
+    }
+    // cout << ans << endl;
+    for (ll i = s.length() + 1; i <= s.length() + k; i++) {
+        // cout << i * maxi << endl;
+        ans += i * maxi;
+    }
+    cout << ans << endl;
 }
 
 /*
 USE LONG LONG!!!!
-
-:pray: :fishy15:
-:pray: :summitosity:
-:pray: :prodakcin:
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

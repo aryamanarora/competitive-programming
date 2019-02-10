@@ -31,6 +31,18 @@ typedef queue<int> qi;
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
+    int n;
+    cin >> n;
+    vl a(n); for (auto &x : a) cin >> x;
+    sort(a.begin(), a.end());
+
+    ll ans = 0;
+    for (int i = 0; i < n / 2; i++) {
+        // cout << (a[i] + a[n - i - 1]) * (a[i] + a[n - i - 1]) << endl;
+        ans += (a[i] + a[n - i - 1]) * (a[i] + a[n - i - 1]);
+    }
+    cout << ans << endl;
 }
 
 /*
@@ -38,7 +50,6 @@ USE LONG LONG!!!!
 
 :pray: :fishy15:
 :pray: :summitosity:
-:pray: :prodakcin:
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

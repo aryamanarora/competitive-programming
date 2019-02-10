@@ -31,14 +31,30 @@ typedef queue<int> qi;
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
+    int n, m;
+    cin >> n >> m;
+    vi colour(n); for (auto &x : colour) cin >> x;
+    map<int, si> neighbours;
+
+    for (int i = 0, u, v; i < m; i++) {
+        cin >> u >> v; u--, v--;
+        if (colour[u] != colour[v]) {
+            neighbours[colour[u]].insert(colour[v]);
+            neighbours[colour[v]].insert(colour[u]);
+        }
+    }
+
+    int ans = colour[0];
+    for (auto &x : colour) {
+        if (neighbours[x].size() > neighbours[ans].size()) ans = x;
+        else if (neighbours[x].size() == neighbours[ans].size()) ans = min(ans, x);
+    }
+    cout << ans << endl;
 }
 
 /*
 USE LONG LONG!!!!
-
-:pray: :fishy15:
-:pray: :summitosity:
-:pray: :prodakcin:
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

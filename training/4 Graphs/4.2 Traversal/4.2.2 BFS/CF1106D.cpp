@@ -31,6 +31,29 @@ typedef queue<int> qi;
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
+    int n, m;
+    cin >> n >> m;
+    vector<vi> g(n);
+    for (int i = 0, u, v; i < m; i++) {
+        cin >> u >> v, u--, v--;
+        g[u].pb(v); g[v].pb(u);
+    }
+
+    priority_queue<int, vi, greater<int>> ac; vi ans; vector<bool> used(n, false);
+    ac.push(0);
+    while (!ac.empty()) {
+        int u = ac.top(); ac.pop();
+        if (used[u]) continue;
+        ans.pb(u);
+        used[u] = true;
+        for (auto &v : g[u]) {
+            if (!used[v]) ac.push(v);
+        }
+    }
+
+    for (auto &x : ans) cout << x + 1 << " ";
+    cout << endl;
 }
 
 /*
@@ -38,7 +61,6 @@ USE LONG LONG!!!!
 
 :pray: :fishy15:
 :pray: :summitosity:
-:pray: :prodakcin:
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

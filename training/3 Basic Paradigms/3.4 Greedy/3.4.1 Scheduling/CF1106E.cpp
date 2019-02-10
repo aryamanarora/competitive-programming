@@ -28,9 +28,26 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
+const ll MOD = 998244353;
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
+    int n, m, k;
+    cin >> n >> m >> k;
+    vii events;
+    vi val(k + 1), wait(k + 1);
+    for (int i = 1, s, t, d, w; i <= k; i++) {
+        cin >> s >> t >> d >> w;
+        events.pb({s, i});
+        events.pb({t, -i});
+        val[i] = d;
+        wait[i] = w;
+    }
+    sort(events.begin(), events.end());
+
+    ll ans = numeric_limits<ll>::max();
 }
 
 /*
@@ -38,7 +55,6 @@ USE LONG LONG!!!!
 
 :pray: :fishy15:
 :pray: :summitosity:
-:pray: :prodakcin:
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

@@ -28,17 +28,59 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
+const ll MOD = 1000000007;
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
+    int n;
+    cin >> n;
+    vl a(n); for (auto &x : a) cin >> x;
+    sort(a.begin(), a.end());
+    ll ans = 0, sum = 1;
+    for (int i = 0; i < n; i++) {
+        // cout << "+ " << (sum - 1) << " * " << a[i] << endl;
+        // cout << "- " << (sum - 1) << " * " << a[n - i - 1] << endl;
+        ans += (sum - 1) * a[i];
+        ans %= MOD;
+        sum *= 2;
+        if (sum >= MOD) sum -= MOD;
+    }
+    sum = 1;
+    for (int i = 0; i < n; i++) {
+        ll sub = (sum - 1) * a[n - i - 1];
+        sub %= MOD;
+        ans -= sub;
+        if (ans < 0) ans += MOD;
+        sum *= 2;
+        if (sum >= MOD) sum -= MOD;
+    }
+    cout << ans << endl;
 }
 
 /*
-USE LONG LONG!!!!
+1 3 4
+3 - 1, 4 - 3, (4 - 1) * 2
 
-:pray: :fishy15:
-:pray: :summitosity:
-:pray: :prodakcin:
+1: +0 -3
+3: +1 -1
+4: +3 -0
+
+1 2 3 4
+2 - 1,
+(3 - 1) * 2, 3 - 2
+(4 - 1) * 4, (4 - 2) * 2, 4 - 3
+
+(2 - 1) + (3 - 1) * 2 + (3 - 2) + (4 - 1) * 4 + (4 - 2) * 2 + (4 - 3)
+= 2 - 1 +
+  3 * 3 - 1 * 2 - 2 +
+  4 * 7 - 1 * 4 - 2 * 2 - 3
+= (-1) * 7 +
+  2 + (-2) * 3 +
+  3 * 3 + (-3) * 1 +
+  4 * 7
+USE LONG LONG!!!!
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

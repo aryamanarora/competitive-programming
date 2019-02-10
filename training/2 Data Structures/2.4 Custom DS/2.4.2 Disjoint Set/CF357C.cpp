@@ -19,22 +19,23 @@ typedef vector<ll> vl;
 #define f first
 #define s second
 
-struct fake_disjoint_set {
-    int n, sets;
-    vi next;
+struct disjoint_set {
+    int n;
+    vi parent;
 
-    fake_disjoint_set(int N) : n(N), next(N) {
-        for (int i = 0; i < N; i++) next[i] = i;
+    disjoint_set(int N) : n(N), parent(N) {}
+    void make_set(int v) {
+        parent[v] = v;
     }
     int find_set(int v) {
-        if (v == next[v]) return v;
-        return next[v] = find_set(next[v]);
+        if (v == parent[v]) return v;
+        return parent[v] = find_set(parent[v]);
     }
     void make_union(int a, int b) {
         a = find_set(a);
         b = find_set(b);
         if (b != a) {
-            next[b] = a;
+            parent[b] = a;
         }
     }
 };
@@ -43,24 +44,29 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int n, m, l, r, x;
+    int n, m;
     cin >> n >> m;
-    fake_disjoint_set dsu(n);
-    vi winner(n, 0);
+    disjoint_set rig(n);
+    for (int i = 0; i < n; i++) rig.make_set(i);
 
-    while (m--) {
+    vi ans(n, -1);
+    for (int i, l, r, x; i < m; i++) {
         cin >> l >> r >> x;
-        l--; r--; x--;
-        int pos = dsu.find_set(l), oldpos = pos;
-        while (pos <= r) {
-            pos = dsu.find_set(pos);
-            dsu.make_union(x, oldpos);
-            winner[oldpos] = x;
-            if (pos == dsu.find_set(pos)) break;
-            oldpos = pos;
+        l--, r--, x--;
+        for (int j = l, i; j <= r;) {
+            if (j == x) {j++; continue;}
+            if (ans[j] == -1) ans[j] = x;
+            if (j == n - 1) break;
+            i = j;
+            j = rig.find_set(j + 1);
+            rig.make_union(j, i);
         }
+        // for (int i = 0; i < n; i++) cout << rig.parent[i] << " ";
+        // cout << endl;
+        // for (int i = 0; i < n; i++) cout << ans[i] + 1 << " ";
+        // cout << endl;
     }
 
-    for (auto &x : winner) cout << x << " ";
+    for (auto &x : ans) cout << x + 1 << " ";
     cout << endl;
 }

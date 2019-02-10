@@ -31,14 +31,38 @@ typedef queue<int> qi;
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
+    int n;
+    cin >> n;
+    vi a(n); for (auto &x : a) cin >> x;
+    if (n == 1) {
+        cout << a[0] << endl;
+        return 0;
+    }
+    int mini = *min_element(a.begin(), a.end()), maxi = *max_element(a.begin(), a.end());
+    
+    ll ans = 0;
+    if (mini <= 0 and maxi >= 0) for (auto &x : a) ans += abs(x);
+    else if (maxi < 0) {
+        ans += 2 * maxi;
+        for (auto &x : a) ans -= x;
+    }
+    else if (mini > 0) {
+        ans -= 2 * mini;
+        for (auto &x : a) ans += x;
+    }
+
+    cout << ans << endl;
 }
 
 /*
 USE LONG LONG!!!!
-
-:pray: :fishy15:
-:pray: :summitosity:
-:pray: :prodakcin:
+:pray:  :summitosity:
+        :fishy15:
+        :prodakcin:
+        :pusheenosity:
+        :arceus:
+        :sinxosity:
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

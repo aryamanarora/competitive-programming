@@ -31,14 +31,28 @@ typedef queue<int> qi;
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
+    int n, m;
+    cin >> n >> m;
+    vector<vii> ans(n);
+    for (int i = 0; i < n; i++) {
+        ans[i].pb({i, i});
+    }
+
+    for (int i = 0, u, v; i < m; i++) {
+        cin >> u >> v, u--, v--;
+        ans[u].pb({n + i, u});
+        ans[v].pb({n + i, v});
+    }
+
+    for (auto &x : ans) {
+        cout << x.size() << endl;
+        for (auto &y : x) cout << y.f + 1 << " " << y.s + 1 << endl;
+    }
 }
 
 /*
 USE LONG LONG!!!!
-
-:pray: :fishy15:
-:pray: :summitosity:
-:pray: :prodakcin:
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

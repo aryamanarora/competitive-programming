@@ -28,9 +28,32 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
+const int BITS = 60;
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
+    ll n, k;
+    cin >> n >> k;
+    vl ct(BITS);
+    for (ll i = 0, j; i < n; i++) {
+        cin >> j;
+        for (ll k = 0; k < BITS; k++) {
+            if ((1LL << k) & j) ct[k]++;
+        }
+    }
+
+    ll res = 0, ans = 0;
+    for (ll i = BITS - 1; i >= 0; i--) {
+        if (ct[i] < n - ct[i] and res + (1LL << i) <= k) {
+            res += (1LL << i);
+            ans += (n - ct[i]) * (1LL << i);
+        }
+        else ans += ct[i] * (1LL << i);
+    }
+
+    cout << ans << endl;
 }
 
 /*
@@ -57,4 +80,22 @@ USE LONG LONG!!!!
        / |  ||   `""""~"`
      /'  |__||
            `o
+*/
+/*
+7 4 0 3
+
+1001
+
+0111
+0100
+0000
+0011
+
+0221
+4223
+
+
+dp:
+
+
 */

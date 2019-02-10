@@ -31,14 +31,14 @@ typedef queue<int> qi;
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
+    ll n;
+    cin >> n;
+    cout << static_cast<int>(ceil(2.0 * sqrt(static_cast<ld>(n)))) << endl;
 }
 
 /*
 USE LONG LONG!!!!
-
-:pray: :fishy15:
-:pray: :summitosity:
-:pray: :prodakcin:
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

@@ -28,17 +28,25 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
+const int MOD = 1000000007;
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
+    ll n;
+    cin >> n;
+    ll ans = 0, pow3 = 1;
+    for (int i = 1; i < n; i++) {
+        pow3 *= 3;
+        pow3 %= MOD;
+        ans = ((pow3 - ans) + MOD) % MOD;
+    }
+    cout << ans << endl;
 }
 
 /*
 USE LONG LONG!!!!
-
-:pray: :fishy15:
-:pray: :summitosity:
-:pray: :prodakcin:
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

@@ -28,17 +28,59 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
+ll ans = 0;
+
+void dfs(int u, int sum, vector<vi> &g, vi &s) {
+    if (s[u] != -1) {
+        if (s[u] >= sum) {
+            ans += (s[u] - sum);
+            sum = s[u];
+        }
+        else {
+            ans = -1;
+            return;
+        } 
+    }
+    else if (g[u].size() != 0) {
+        int oldsum = sum;
+        sum = -1;
+        for (auto &v : g[u]) {
+            if (sum == -1) sum = s[v];
+            else sum = min(sum, s[v]);
+        }
+        if (sum < oldsum) {
+            ans = -1;
+            return;
+        }
+        ans += (sum - oldsum);
+    }
+    // cout << u << ": " << sum << endl;
+    for (auto &v : g[u]) {
+        dfs(v, sum, g, s);
+        if (ans == -1) return;
+    }
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
+    int n;
+    cin >> n;
+    vector<vi> g(n); vi s(n);
+    for (int i = 1, u; i < n; i++) {
+        cin >> u;
+        u--;
+        g[u].pb(i);
+    }
+    for (auto &x : s) cin >> x;
+
+    dfs(0, 0, g, s);
+    cout << ans << endl;
 }
 
 /*
 USE LONG LONG!!!!
-
-:pray: :fishy15:
-:pray: :summitosity:
-:pray: :prodakcin:
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

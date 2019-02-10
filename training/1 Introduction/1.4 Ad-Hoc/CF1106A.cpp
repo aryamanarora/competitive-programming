@@ -31,6 +31,23 @@ typedef queue<int> qi;
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
+    int n;
+    cin >> n;
+    vector<string> a(n); for (auto &x : a) cin >> x;
+
+    int ans = 0;
+    for (int i = 1; i < n - 1; i++) {
+        for (int j = 1; j < n - 1; j++) {
+            if (a[i][j] == 'X' and
+                a[i + 1][j + 1] == a[i][j] and
+                a[i + 1][j - 1] == a[i][j] and
+                a[i - 1][j + 1] == a[i][j] and
+                a[i - 1][j - 1] == a[i][j]) ans++;
+        }
+    }
+
+    cout << ans << endl;
 }
 
 /*
@@ -38,7 +55,6 @@ USE LONG LONG!!!!
 
 :pray: :fishy15:
 :pray: :summitosity:
-:pray: :prodakcin:
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \
