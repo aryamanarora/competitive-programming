@@ -17,3 +17,11 @@ Also included are solutions from programming contests.
     * Lazy propagation: ?
   * Cartesian Tree (useless):
     * [Template](https://github.com/aryamanarora/usaco/blob/master/training/2%20Data%20Structures/2.4%20Custom%20DS/2.4.5%20Cartesian%20Tree%20%26%20Treap/README.cpp)
+
+## Scores
+
+### 2018-2019
+
+* Dec 2018: 1000 (Bronze), 700 (Silver)
+* Jan 2019: 1000 (Silver), 667 (Gold)
+* Feb 2019: TBA

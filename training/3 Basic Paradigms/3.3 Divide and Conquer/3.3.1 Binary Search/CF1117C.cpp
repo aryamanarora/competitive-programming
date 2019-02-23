@@ -28,53 +28,65 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
+map<char, ii> dir = {
+    {'U', {0, 1}},
+    {'R', {1, 0}},
+    {'D', {0, -1}},
+    {'L', {-1, 0}}
+};
+
+template<typename T, typename S>
+void operator+=(pair<T, S> &x, const pair<T, S> &y) {
+    x.f += y.f;
+    x.s += y.s;
+}
+
+template<typename T, typename S>
+pair<T, S>& operator+(const pair<T, S> &x, const pair<T, S> &y) {
+    return mp(x.f + y.f, x.s + y.s);
+}
+
+ll dist(pair<ll, ll> &x, pair<ll, ll> &y) {
+    return (abs(x.f - y.f) + abs(x.s - y.s));
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("snowboots.in");
-    ofstream cout("snowboots.out");
-    
-    int n, b;
-    cin >> n >> b;
-    vi a(n); for (auto &x : a) cin >> x;
+    pair<ll, ll> a, b; int n; string s;
+    cin >> a.f >> a.s >> b.f >> b.s >> n >> s;
 
-    si gaps;
-    priority_queue<ii> pq;
+    vector<pair<ll, ll>> prefixsum(n);
     for (int i = 0; i < n; i++) {
-        pq.push({a[i], i});
-        gaps.insert(i);
+        prefixsum[i] = dir[s[i]];
+        if (i > 0) prefixsum[i] += prefixsum[i - 1];
     }
 
-    vector<pair<ii, int>> queries(b);
-    int ct = 0;
-    for (auto &x : queries) {
-        cin >> x.f.f >> x.f.s;
-        x.s = ct++;
-    }
-    sort(queries.rbegin(), queries.rend());
+    auto check = [&](ll val) {
+        pair<ll, ll> pos = a;
+        pos.f += (val / n) * prefixsum[n - 1].f;
+        pos.s += (val / n) * prefixsum[n - 1].s;
+        if (val % n != 0) pos += prefixsum[val % n - 1];
+        return (dist(pos, b) <= val);
+    };
 
-    vector<bool> ans(b);
-    int maxgap = 1;
-    for (auto &x : queries) {
-        // cerr << x.f.f << " " << x.f.s << " " << x.s << endl;
-        while (pq.top().f > x.f.f and gaps.size() > 2) {
-            ii cur = pq.top();
-            pq.pop();
-            gaps.erase(cur.s);
-            auto it = gaps.lower_bound(cur.s);
-            auto it2 = it; it2--;
-            maxgap = max(maxgap, *it - *it2);
-        }
-        if (x.f.s >= maxgap) ans[x.s] = 1;
-        else ans[x.s] = 0;
+    ll lo = 0, hi = 1e16;
+    while (lo <= hi) {
+        ll mid = (lo + hi) / 2;
+        if (check(mid)) hi = mid - 1;
+        else lo = mid + 1;
     }
 
-    for (auto x : ans) cout << x << '\n';
+    cout << (lo >= 1e16 ? -1 : lo) << endl;
 }
 
 /*
 USE LONG LONG!!!!
+
+:pray: :fishy15:
+:pray: :summitosity:
+:pray: :prodakcin:
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

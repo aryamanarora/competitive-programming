@@ -32,49 +32,30 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("snowboots.in");
-    ofstream cout("snowboots.out");
-    
-    int n, b;
-    cin >> n >> b;
+    ifstream cin("teamwork.in");
+    ofstream cout("teamwork.out");
+
+    int n, k;
+    cin >> n >> k;
     vi a(n); for (auto &x : a) cin >> x;
-
-    si gaps;
-    priority_queue<ii> pq;
+    vi dp(n);
     for (int i = 0; i < n; i++) {
-        pq.push({a[i], i});
-        gaps.insert(i);
-    }
-
-    vector<pair<ii, int>> queries(b);
-    int ct = 0;
-    for (auto &x : queries) {
-        cin >> x.f.f >> x.f.s;
-        x.s = ct++;
-    }
-    sort(queries.rbegin(), queries.rend());
-
-    vector<bool> ans(b);
-    int maxgap = 1;
-    for (auto &x : queries) {
-        // cerr << x.f.f << " " << x.f.s << " " << x.s << endl;
-        while (pq.top().f > x.f.f and gaps.size() > 2) {
-            ii cur = pq.top();
-            pq.pop();
-            gaps.erase(cur.s);
-            auto it = gaps.lower_bound(cur.s);
-            auto it2 = it; it2--;
-            maxgap = max(maxgap, *it - *it2);
+        int maxi = 0;
+        for (int j = i; j > i - k and j >= 0; j--) {
+            maxi = max(maxi, a[j]);
+            if (j > 0) dp[i] = max(maxi * (i - j + 1) + dp[j - 1], dp[i]);
+            else dp[i] = max(maxi * (i - j + 1), dp[i]);
         }
-        if (x.f.s >= maxgap) ans[x.s] = 1;
-        else ans[x.s] = 0;
     }
-
-    for (auto x : ans) cout << x << '\n';
+    cout << dp[n - 1] << endl;
 }
 
 /*
 USE LONG LONG!!!!
+
+:pray: :fishy15:
+:pray: :summitosity:
+:pray: :prodakcin:
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

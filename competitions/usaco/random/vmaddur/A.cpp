@@ -13,6 +13,15 @@ typedef vector<int> vi;
 typedef vector<ii> vii;
 typedef vector<ld> vd;
 typedef vector<ll> vl;
+
+typedef set<int> si;
+typedef set<ii> sii;
+typedef set<ld> sd;
+typedef set<ll> sl;
+
+typedef map<int, int> mii;
+typedef priority_queue<int> pqi;
+typedef queue<int> qi;
  
 #define mp make_pair
 #define pb push_back
@@ -23,34 +32,48 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("cowmpatibility.in");
-    ofstream cout("cowmpatibility.out");
-
-    map<array<int, 2>, int> twos;
-    map<array<int, 3>, int> threes;
-    map<array<int, 4>, int> fours;
-    map<array<int, 5>, int> fives;
-
-    int n;
-    cin >> n;
-
-    array<int, 5> cur;
+    int n, m;
+    cin >> n >> m;
+    vector<si> g(n);
     for (int i = 0; i < n; i++) {
-        for (auto &x : cur) cin >> x;
-        sort(cur.begin(), cur.end());
-        for (int i = 0; i < 5; i++)
-            for (int j = i + 1; j < 5; j++) twos[{i, j}]++;
-        for (int i = 0; i < 5; i++)
-            for (int j = i + 1; j < 5; j++)
-                for (int k = j + 1; k < 5; k++) threes[{i, j, k}]++;
-        for (int i = 0; i < 5; i++)
-            for (int j = i + 1; j < 5; j++)
-                for (int k = j + 1; k < 5; k++) threes[{i, j, k}]++;
+        for (int j = 0; j < n; j++) {
+            if (i == j) continue;
+            g[i].insert(j);
+        }
     }
+
+    for (int i = 0, u, v; i < m; i++) {
+        cin >> u >> v, u--, v--;
+        g[u].erase(v);
+        g[v].erase(u);
+    }
+
+    size_t ans = 0;
+
+    vector<bool> vis(n);
+    stack<int> cur;
+    function<void(int)> dfs = [&](int u) {
+        cur.push(u);
+        ans = max(ans, cur.size());
+        vis[u] = true;
+        for (auto &v : g[u]) {
+            if (!vis[v]) dfs(v);
+        }
+        cur.pop();
+        vis[u] = false;
+    };
+
+    for (int i = 0; i < n; i++) dfs(i);
+
+    cout << ans << endl;
 }
 
 /*
 USE LONG LONG!!!!
+
+:pray: :fishy15:
+:pray: :summitosity:
+:pray: :prodakcin:
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \
@@ -69,8 +92,4 @@ USE LONG LONG!!!!
        / |  ||   `""""~"`
      /'  |__||
            `o
-
-1 2 3 4 5 6 7 8 9
-1 2 3 4 5|6 7 8 9
 */
-

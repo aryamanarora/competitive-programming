@@ -13,15 +13,6 @@ typedef vector<int> vi;
 typedef vector<ii> vii;
 typedef vector<ld> vd;
 typedef vector<ll> vl;
-
-typedef set<int> si;
-typedef set<ii> sii;
-typedef set<ld> sd;
-typedef set<ll> sl;
-
-typedef map<int, int> mii;
-typedef priority_queue<int> pqi;
-typedef queue<int> qi;
  
 #define mp make_pair
 #define pb push_back
@@ -32,38 +23,42 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("taming.in");
-    ofstream cout("taming.out");
+    ifstream cin("cowpatibility.in");
+    ofstream cout("cowpatibility.out");
 
-    int n;
+    map<array<int, 5>, int> ct[6];
+
+    ll n;
     cin >> n;
-    vi a(n); for (auto &x : a) cin >> x;
 
-    vi cur(n);
-    auto check = [&](vi &x) {
-        int diff = 0; for (int i = 0; i < n; i++) diff += (a[i] != x[i]);
-        return diff;
-    };
-
-    iota(cur.begin(), cur.end(), 0);
-    cout << check(cur) << endl;
-    for (int i = 1; i < n; i++) {
-        int mini = n; vi res;
-        for (int j = 0; j < n; j++) {
-            if (cur[j] == 0) continue;
-            vi test = cur;
-            for (int k = j; test[k] != 0 and k < n; k++) test[k] = k - j;
-            int t = check(test);
-            if (t < mini) {
-                mini = t;
-                res = test;
+    array<int, 5> x, y;
+    for (int i = 0; i < n; i++) {
+        for (auto &y : x) cin >> y;
+        sort(x.begin(), x.end());
+        y = x;
+        for (int j = 1; j < 32; j++) {
+            for (int k = 0; k < 5; k++) {
+                if ((1 << k) & j) y[k] = x[k];
+                else y[k] = 0;
             }
+            sort(y.begin(), y.end());
+            ct[__builtin_popcount(j)][y]++;
         }
-        cur = res;
-        cout << mini << endl;
-        // for (auto &x : cur) cout << x << " ";
-        // cout << endl;
     }
+
+    ll ans = 0;
+    for (int i = 1; i <= 5; i++) {
+        for (auto &y : ct[i]) {
+            if (i % 2) ans += (y.s * (y.s - 1LL)) / 2LL;
+            else ans -= (y.s * (y.s - 1LL)) / 2LL;
+            // cerr << (y.s * (y.s - 1)) / 2 << endl;
+        }
+        // cerr << ans << endl;
+        // cerr << endl;
+    }
+
+    ans = (n * (n - 1)) / 2 - ans;
+    cout << ans << endl;
 }
 
 /*
@@ -87,3 +82,4 @@ USE LONG LONG!!!!
      /'  |__||
            `o
 */
+

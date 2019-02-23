@@ -32,49 +32,32 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("snowboots.in");
-    ofstream cout("snowboots.out");
-    
-    int n, b;
-    cin >> n >> b;
-    vi a(n); for (auto &x : a) cin >> x;
-
-    si gaps;
-    priority_queue<ii> pq;
-    for (int i = 0; i < n; i++) {
-        pq.push({a[i], i});
-        gaps.insert(i);
+    ll n, k;
+    cin >> n >> k;
+    if (n > k * (k - 1)) {
+        cout << "NO" << endl;
+        return 0;
     }
 
-    vector<pair<ii, int>> queries(b);
-    int ct = 0;
-    for (auto &x : queries) {
-        cin >> x.f.f >> x.f.s;
-        x.s = ct++;
-    }
-    sort(queries.rbegin(), queries.rend());
-
-    vector<bool> ans(b);
-    int maxgap = 1;
-    for (auto &x : queries) {
-        // cerr << x.f.f << " " << x.f.s << " " << x.s << endl;
-        while (pq.top().f > x.f.f and gaps.size() > 2) {
-            ii cur = pq.top();
-            pq.pop();
-            gaps.erase(cur.s);
-            auto it = gaps.lower_bound(cur.s);
-            auto it2 = it; it2--;
-            maxgap = max(maxgap, *it - *it2);
+    cout << "YES" << endl;
+    for (int i = 1, ct = 0; i <= k and ct < n; i++) {
+        for (int j = i + 1; j <= k and ct < n; j++) {
+            cout << i << " " << j << endl;
+            ct++;
+            if (ct >= n) break;
+            cout << j << " " << i << endl;
+            ct++;
+            if (ct >= n) break;
         }
-        if (x.f.s >= maxgap) ans[x.s] = 1;
-        else ans[x.s] = 0;
     }
-
-    for (auto x : ans) cout << x << '\n';
 }
 
 /*
 USE LONG LONG!!!!
+
+:pray: :fishy15:
+:pray: :summitosity:
+:pray: :prodakcin:
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

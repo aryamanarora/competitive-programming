@@ -32,49 +32,48 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("snowboots.in");
-    ofstream cout("snowboots.out");
-    
-    int n, b;
-    cin >> n >> b;
-    vi a(n); for (auto &x : a) cin >> x;
-
-    si gaps;
-    priority_queue<ii> pq;
-    for (int i = 0; i < n; i++) {
-        pq.push({a[i], i});
-        gaps.insert(i);
-    }
-
-    vector<pair<ii, int>> queries(b);
-    int ct = 0;
-    for (auto &x : queries) {
-        cin >> x.f.f >> x.f.s;
-        x.s = ct++;
-    }
-    sort(queries.rbegin(), queries.rend());
-
-    vector<bool> ans(b);
-    int maxgap = 1;
-    for (auto &x : queries) {
-        // cerr << x.f.f << " " << x.f.s << " " << x.s << endl;
-        while (pq.top().f > x.f.f and gaps.size() > 2) {
-            ii cur = pq.top();
-            pq.pop();
-            gaps.erase(cur.s);
-            auto it = gaps.lower_bound(cur.s);
-            auto it2 = it; it2--;
-            maxgap = max(maxgap, *it - *it2);
+    int n;
+    cin >> n;
+    vii a(n); for (auto &x : a) cin >> x.f >> x.s;
+    for (int i = 1; i < n; i++) {
+        if ((a[i].s < 0 and a[i - 1].s > 0) or (a[i].s > 0 and a[i - 1].s < 0)) {
+            cout << -1 << endl;
+            return 0;
         }
-        if (x.f.s >= maxgap) ans[x.s] = 1;
-        else ans[x.s] = 0;
     }
 
-    for (auto x : ans) cout << x << '\n';
+    for (auto &x : a) x.s = abs(x.s);
+
+    auto check = [&](ld r) {
+        ld lo = -numeric_limits<ld>::infinity(), hi = numeric_limits<ld>::infinity();
+        for (auto &x : a) {
+            ld y = abs(r - static_cast<ld>(x.s));
+            ld dist = sqrt(r * r - y * y);
+            ld lox = static_cast<ld>(x.f) - dist, hix = static_cast<ld>(x.f) + dist;
+            if (lo <= hix and lox <= hi) lo = max(lo, lox), hi = min(hi, hix);
+            else return false;
+        }
+        return true;
+    };
+
+    int ct = 0;
+    ld lo = 0.0, hi = 1e17;
+    while (ct < 1000) {
+        ld mid = (lo + hi) / ld(2.0);
+        if (check(mid)) hi = mid;
+        else lo = mid;
+        ct++;
+    }
+
+    cout << fixed << setprecision(10) << lo << endl;
 }
 
 /*
 USE LONG LONG!!!!
+
+:pray: :fishy15:
+:pray: :summitosity:
+:pray: :prodakcin:
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

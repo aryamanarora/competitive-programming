@@ -32,49 +32,35 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("snowboots.in");
-    ofstream cout("snowboots.out");
-    
-    int n, b;
-    cin >> n >> b;
+    ll n, m;
+    cin >> n >> m;
     vi a(n); for (auto &x : a) cin >> x;
+    sort(a.rbegin(), a.rend());
 
-    si gaps;
-    priority_queue<ii> pq;
-    for (int i = 0; i < n; i++) {
-        pq.push({a[i], i});
-        gaps.insert(i);
-    }
-
-    vector<pair<ii, int>> queries(b);
-    int ct = 0;
-    for (auto &x : queries) {
-        cin >> x.f.f >> x.f.s;
-        x.s = ct++;
-    }
-    sort(queries.rbegin(), queries.rend());
-
-    vector<bool> ans(b);
-    int maxgap = 1;
-    for (auto &x : queries) {
-        // cerr << x.f.f << " " << x.f.s << " " << x.s << endl;
-        while (pq.top().f > x.f.f and gaps.size() > 2) {
-            ii cur = pq.top();
-            pq.pop();
-            gaps.erase(cur.s);
-            auto it = gaps.lower_bound(cur.s);
-            auto it2 = it; it2--;
-            maxgap = max(maxgap, *it - *it2);
+    auto check = [&](int days) {
+        ll res = 0;
+        for (int i = 0; i < n; i++) {
+            res += max(0, a[i] - (i / days));
         }
-        if (x.f.s >= maxgap) ans[x.s] = 1;
-        else ans[x.s] = 0;
+        return res >= m;
+    };
+
+    int lo = 1, hi = n;
+    while (lo <= hi) {
+        int mid = (lo + hi) / 2;
+        if (check(mid)) hi = mid - 1;
+        else lo = mid + 1;
     }
 
-    for (auto x : ans) cout << x << '\n';
+    cout << (lo > n ? -1 : lo) << endl;
 }
 
 /*
 USE LONG LONG!!!!
+
+:pray: :fishy15:
+:pray: :summitosity:
+:pray: :prodakcin:
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

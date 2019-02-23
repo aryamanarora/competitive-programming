@@ -32,49 +32,51 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("snowboots.in");
-    ofstream cout("snowboots.out");
-    
-    int n, b;
-    cin >> n >> b;
+    ifstream cin("art2.in");
+    ofstream cout("art2.out");
+
+    int n;
+    cin >> n;
     vi a(n); for (auto &x : a) cin >> x;
 
-    si gaps;
-    priority_queue<ii> pq;
+    vii depth(n, {-1, -1});
     for (int i = 0; i < n; i++) {
-        pq.push({a[i], i});
-        gaps.insert(i);
+        if (a[i] == 0) continue;
+        if (depth[a[i] - 1].f == -1) depth[a[i] - 1].f = i;
+        depth[a[i] - 1].s = max(depth[a[i] - 1].s, i);
     }
 
-    vector<pair<ii, int>> queries(b);
-    int ct = 0;
-    for (auto &x : queries) {
-        cin >> x.f.f >> x.f.s;
-        x.s = ct++;
+    vii events;
+    for (int i = 0; i < n; i++) {
+        if (depth[i].f == -1 or depth[i].s == -1) continue;
+        events.pb({depth[i].f, -(i + 1)});
+        events.pb({depth[i].s, (i + 1)});
     }
-    sort(queries.rbegin(), queries.rend());
+    sort(events.begin(), events.end());
 
-    vector<bool> ans(b);
-    int maxgap = 1;
-    for (auto &x : queries) {
-        // cerr << x.f.f << " " << x.f.s << " " << x.s << endl;
-        while (pq.top().f > x.f.f and gaps.size() > 2) {
-            ii cur = pq.top();
-            pq.pop();
-            gaps.erase(cur.s);
-            auto it = gaps.lower_bound(cur.s);
-            auto it2 = it; it2--;
-            maxgap = max(maxgap, *it - *it2);
+    int ans = 0;
+    vi active;
+    for (auto &x : events) {
+        if (x.s < 0) active.push_back(-x.s);
+        else {
+            if (active.back() != x.s) {
+                cout << -1 << endl;
+                return 0;
+            }
+            else active.pop_back();
         }
-        if (x.f.s >= maxgap) ans[x.s] = 1;
-        else ans[x.s] = 0;
+        ans = max(ans, static_cast<int>(active.size()));
     }
 
-    for (auto x : ans) cout << x << '\n';
+    cout << ans << endl;
 }
 
 /*
 USE LONG LONG!!!!
+
+:pray: :fishy15:
+:pray: :summitosity:
+:pray: :prodakcin:
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

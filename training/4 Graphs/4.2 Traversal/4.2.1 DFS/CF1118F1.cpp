@@ -32,49 +32,51 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("snowboots.in");
-    ofstream cout("snowboots.out");
-    
-    int n, b;
-    cin >> n >> b;
-    vi a(n); for (auto &x : a) cin >> x;
+    int n;
+    cin >> n;
 
-    si gaps;
-    priority_queue<ii> pq;
-    for (int i = 0; i < n; i++) {
-        pq.push({a[i], i});
-        gaps.insert(i);
+    int one = 0, two = 0;
+    vi a(n);
+    for (auto &x : a) {
+        cin >> x;
+        one += (x == 1);
+        two += (x == 2);
     }
 
-    vector<pair<ii, int>> queries(b);
-    int ct = 0;
-    for (auto &x : queries) {
-        cin >> x.f.f >> x.f.s;
-        x.s = ct++;
+    vector<vi> g(n);
+    for (int i = 0, u, v; i < n - 1; i++) {
+        cin >> u >> v, u--, v--;
+        g[u].pb(v);
+        g[v].pb(u);
     }
-    sort(queries.rbegin(), queries.rend());
 
-    vector<bool> ans(b);
-    int maxgap = 1;
-    for (auto &x : queries) {
-        // cerr << x.f.f << " " << x.f.s << " " << x.s << endl;
-        while (pq.top().f > x.f.f and gaps.size() > 2) {
-            ii cur = pq.top();
-            pq.pop();
-            gaps.erase(cur.s);
-            auto it = gaps.lower_bound(cur.s);
-            auto it2 = it; it2--;
-            maxgap = max(maxgap, *it - *it2);
+    int ans = 0;
+    function<vi(int, int)> dfs = [&](int u, int p) -> vi {
+        vi ct(3, 0);
+        ct[a[u]]++;
+        for (auto &v : g[u]) {
+            if (v == p) continue;
+            vi add = dfs(v, u);
+            for (int i = 0; i < 3; i++) ct[i] += add[i];
         }
-        if (x.f.s >= maxgap) ans[x.s] = 1;
-        else ans[x.s] = 0;
-    }
 
-    for (auto x : ans) cout << x << '\n';
+        if (((ct[1] == one and ct[2] == 0) or (ct[1] == 0 and ct[2] == two)) and p != -1) {
+            ans++;
+        }
+        return ct;
+    };
+
+    dfs(0, -1);
+
+    cout << ans << endl;
 }
 
 /*
 USE LONG LONG!!!!
+
+:pray: :fishy15:
+:pray: :summitosity:
+:pray: :prodakcin:
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

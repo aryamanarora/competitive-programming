@@ -32,49 +32,42 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ifstream cin("snowboots.in");
-    ofstream cout("snowboots.out");
-    
-    int n, b;
-    cin >> n >> b;
-    vi a(n); for (auto &x : a) cin >> x;
+    int n;
+    cin >> n;
+    vl a(n); for (auto &x : a) cin >> x;
 
-    si gaps;
-    priority_queue<ii> pq;
+    vl prefixsum(n), suffixsum(n);
     for (int i = 0; i < n; i++) {
-        pq.push({a[i], i});
-        gaps.insert(i);
+        prefixsum[i] = a[i];
+        if (i - 2 >= 0) prefixsum[i] += prefixsum[i - 2];
+    }
+    for (int i = n - 1; i >= 0; i--) {
+        suffixsum[i] = a[i];
+        if (i + 2 < n) suffixsum[i] += suffixsum[i + 2];
     }
 
-    vector<pair<ii, int>> queries(b);
-    int ct = 0;
-    for (auto &x : queries) {
-        cin >> x.f.f >> x.f.s;
-        x.s = ct++;
-    }
-    sort(queries.rbegin(), queries.rend());
+    int ans = 0;
+    for (int i = 0; i < n; i++) {
+        ll a = 0;
+        if (i - 1 >= 0) a += prefixsum[i - 1];
+        if (i + 2 < n) a += suffixsum[i + 2];
 
-    vector<bool> ans(b);
-    int maxgap = 1;
-    for (auto &x : queries) {
-        // cerr << x.f.f << " " << x.f.s << " " << x.s << endl;
-        while (pq.top().f > x.f.f and gaps.size() > 2) {
-            ii cur = pq.top();
-            pq.pop();
-            gaps.erase(cur.s);
-            auto it = gaps.lower_bound(cur.s);
-            auto it2 = it; it2--;
-            maxgap = max(maxgap, *it - *it2);
-        }
-        if (x.f.s >= maxgap) ans[x.s] = 1;
-        else ans[x.s] = 0;
+        ll b = 0;
+        if (i - 2 >= 0) b += prefixsum[i - 2];
+        if (i + 1 < n) b += suffixsum[i + 1];
+
+        if (a == b) ans++;
     }
 
-    for (auto x : ans) cout << x << '\n';
+    cout << ans << endl;
 }
 
 /*
 USE LONG LONG!!!!
+
+:pray: :fishy15:
+:pray: :summitosity:
+:pray: :prodakcin:
 
           .=     ,        =.
   _  _   /'/    )\,/,/(_   \ \

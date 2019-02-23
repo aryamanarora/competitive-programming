@@ -39,18 +39,18 @@ int main() {
 
     int n, m, k;
     cin >> n >> m >> k;
-    vector<vii> g(n);
+    vector<vii> g(n + 1);
     for (int i = 0, u, v, w; i < m; i++) {
         cin >> u >> v >> w; u--, v--;
         g[u].pb({v, w});
         g[v].pb({u, w});
     }
 
-    vl dist(n, INF);
-    function<void()> dijkstra = [&]() {
+    vl dist(n + 1, INF);
+    function<void(int)> dijkstra = [&](int source) {
         set<pair<ll, int>> q;
-        dist[n - 1] = 0;
-        q.insert({0, n - 1});
+        dist[source] = 0;
+        q.insert({0, source});
         while (!q.empty()) {
             int u = q.begin()->s;
             q.erase(q.begin());
@@ -66,29 +66,19 @@ int main() {
         }
     };
 
-    dijkstra();
-
-    for (int i = 0; i < n - 1; i++) {
-        for (auto j = g[i].begin(); j != g[i].end(); j++) {
-            if (j->f == n - 1) {
-                g[i].erase(j);
-                break;
-            }
-        }
-    }
+    dijkstra(n - 1);
     
     for (int i = 0, v, w; i < k; i++) {
         cin >> v >> w; v--;
-        g[n - 1].pb({v, -w});
+        g[n].pb({v, dist[v] - w});
     }
 
     vl olddist = dist;
     fill(dist.begin(), dist.end(), INF);
 
-    dijkstra();
+    dijkstra(n);
 
     for (int i = 0; i < n - 1; i++) {
-        // cout << dist[i] << " " << olddist[i] << '\n';
         cout << (dist[i] <= olddist[i]) << '\n';
     }
 }
