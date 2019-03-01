@@ -28,6 +28,8 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
+mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);

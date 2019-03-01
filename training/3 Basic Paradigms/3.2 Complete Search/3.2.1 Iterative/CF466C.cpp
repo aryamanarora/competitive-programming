@@ -22,37 +22,23 @@ typedef vector<ll> vl;
 int main() {
     ll n = 0;
     cin >> n;
-    vl a(n), sum(n), sum_rev(n);
-    vl x, y;
+    vl a(n);
     ll sum_n = 0;
-    for (int i = 0; i < n; i++) {
-        cin >> a[i];
-        sum_n += a[i];
-        sum[i] = sum_n;
-    }
+    for (auto &x : a) cin >> x, sum_n += x;
 
     ll ans = 0;
     if (sum_n % 3 != 0) {
-        cout << ans << "\n";
+        cout << ans << endl;
         return 0;
     }
 
-    for (ll i = 0; i < n; i++) {
-        if (sum[i] == sum_n/3) x.pb(i);
-        if (sum[i] == 2 * (sum_n/3) and i != n - 1) y.pb(i+1);
+    ll sum = 0;
+    ll one = 0;
+    for (int i = 0; i < n - 1; i++) {
+        sum += a[i];
+        if (sum == (sum_n / 3) * 2) ans += one;
+        if (sum == sum_n / 3) one++;
     }
 
-    int size = y.size(), min_b = 0;
-
-    for (auto a : x) {
-        for (int b = min_b; b < size; b++) {
-            if (y[b] >= a + 2) {
-                min_b = b;
-                ans += size - b;
-                break;
-            }
-        }
-    }
-
-    cout << ans << "\n";
+    cout << ans << endl;
 }
