@@ -30,40 +30,49 @@ typedef queue<int> qi;
 
 mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
 
-const ll MOD = 2 * (1e9 + 7);
-
-ll modpow(ll x, ll y) 
-{ 
-    ll res = 1;      // Initialize result 
-    while (y > 0) 
-    { 
-        // If y is odd, multiply x with result 
-        if (y & 1) 
-            res = (res * x) % MOD; 
-  
-        // y must be even now 
-        y = y >> 1; // y = y/2 
-        x = (x * x) % MOD;   
-    } 
-    return res; 
-} 
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ll x, k;
-    cin >> x >> k;
+    int n, q;
+    cin >> n >> q;
+    vii a(q); for (auto &[l, r] : a) cin >> l >> r, l--, r--;
 
-    if (x == 0) {
-        cout << 0 << endl;
-        return 0;
+    vi ct(n + 1);
+    for (auto &[l, r] : a) ct[l]++, ct[r + 1]--;
+
+    vi ones(n + 1), twos(n + 1);
+    ll sum = 0;
+    for (int i = 0; i <= n; i++) {
+        if (i > 0) ct[i] += ct[i - 1], ones[i] += ones[i - 1], twos[i] += twos[i - 1];
+        if (ct[i] == 1) ones[i]++;
+        else if (ct[i] == 2) twos[i]++;
+        if (ct[i]) sum++;
     }
 
-    ll maxi = ((x % MOD) * modpow(2, k + 1)) % MOD;
-    ll mini = (((maxi - (modpow(2, k) - 1) * 2) % MOD) + MOD) % MOD;
+    // for (auto &x : ct) cout << x << " ";
+    // cout << endl;
 
-    cout << ((maxi + mini) / 2 + (MOD / 2)) % (MOD / 2) << endl;
+    auto range_sum = [](vi &a, int l, int r) {
+        return (a[r] - (l == 0 ? 0 : a[l - 1]));
+    };
+
+    ll ans = 0;
+    for (int i = 0; i < q; i++) {
+        for (int j = i + 1; j < q; j++) {
+            ll rem = 0;
+            rem += range_sum(ones, a[i].f, a[i].s);
+            rem += range_sum(ones, a[j].f, a[j].s);
+
+            int l = max(a[i].f, a[j].f), r = min(a[i].s, a[j].s);
+            if (l <= r) rem += range_sum(twos, l, r);
+
+            ans = max(ans, sum - rem);
+            // cout << i << " " << j << ": " << rem << endl;
+        }
+    }
+
+    cout << ans << endl;
 }
 
 /*
@@ -90,22 +99,4 @@ USE LONG LONG!!!!
        / |  ||   `""""~"`
      /'  |__||
            `o
-*/
-
-/*
-2
-0: 4
-   3 4
-1: 6 8 
-   5 6 7 8
-2: 10 12 14 16
-   9 10 11 12 13 14 15 16
-3: 18
-
-1
-0: 2
-   1 2
-1: 2 4
-   1 2 3 4
-2: 2 4 6 8
 */

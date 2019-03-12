@@ -30,40 +30,30 @@ typedef queue<int> qi;
 
 mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
 
-const ll MOD = 2 * (1e9 + 7);
-
-ll modpow(ll x, ll y) 
-{ 
-    ll res = 1;      // Initialize result 
-    while (y > 0) 
-    { 
-        // If y is odd, multiply x with result 
-        if (y & 1) 
-            res = (res * x) % MOD; 
-  
-        // y must be even now 
-        y = y >> 1; // y = y/2 
-        x = (x * x) % MOD;   
-    } 
-    return res; 
-} 
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ll x, k;
-    cin >> x >> k;
+    vi fac(10000005)
 
-    if (x == 0) {
-        cout << 0 << endl;
-        return 0;
+    string s; int m;
+    cin >> s >> m;
+    int len = s.length();
+    mii ct;
+    for (auto &x : s) ct[x]++;
+
+    while (m--) {
+        int a, b;
+        cin >> a >> b, a--, b--;
+        if (s[a] == s[b]) {
+            int c = ct[s[a]];
+            if (c > len) {
+                cout << 0 << endl;
+                return 0;
+            }
+
+        }
     }
-
-    ll maxi = ((x % MOD) * modpow(2, k + 1)) % MOD;
-    ll mini = (((maxi - (modpow(2, k) - 1) * 2) % MOD) + MOD) % MOD;
-
-    cout << ((maxi + mini) / 2 + (MOD / 2)) % (MOD / 2) << endl;
 }
 
 /*
@@ -90,22 +80,4 @@ USE LONG LONG!!!!
        / |  ||   `""""~"`
      /'  |__||
            `o
-*/
-
-/*
-2
-0: 4
-   3 4
-1: 6 8 
-   5 6 7 8
-2: 10 12 14 16
-   9 10 11 12 13 14 15 16
-3: 18
-
-1
-0: 2
-   1 2
-1: 2 4
-   1 2 3 4
-2: 2 4 6 8
 */

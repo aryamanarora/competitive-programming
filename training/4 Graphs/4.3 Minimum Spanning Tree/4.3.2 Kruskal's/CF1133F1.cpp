@@ -30,40 +30,66 @@ typedef queue<int> qi;
 
 mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
 
-const ll MOD = 2 * (1e9 + 7);
+struct disjoint_set {
+    int n;
+    vi parent, size;
 
-ll modpow(ll x, ll y) 
-{ 
-    ll res = 1;      // Initialize result 
-    while (y > 0) 
-    { 
-        // If y is odd, multiply x with result 
-        if (y & 1) 
-            res = (res * x) % MOD; 
-  
-        // y must be even now 
-        y = y >> 1; // y = y/2 
-        x = (x * x) % MOD;   
-    } 
-    return res; 
-} 
+    disjoint_set(int N) : n(N), size(N), parent(N) {
+    }
+    void make_set(int v) {
+        parent[v] = v;
+        size[v] = 1;
+    }
+    int find_set(int v) {
+        if (v == parent[v]) return v;
+        return parent[v] = find_set(parent[v]);
+    }
+    void make_union(int a, int b) {
+        a = find_set(a);
+        b = find_set(b);
+        if (b != a) {
+            if (size[a] < size[b]) swap(a, b);
+            parent[b] = a;
+            size[a] += size[b];
+            size[b] = 0;
+        }
+    }
+};
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ll x, k;
-    cin >> x >> k;
-
-    if (x == 0) {
-        cout << 0 << endl;
-        return 0;
+    int n, m;
+    cin >> n >> m;
+    vi ct(n);
+    vii edges(m);
+    vii ans;
+    for (auto &[u, v] : edges) {
+        cin >> u >> v, u--, v--;
+        ct[u]++;
+        ct[v]++;
     }
 
-    ll maxi = ((x % MOD) * modpow(2, k + 1)) % MOD;
-    ll mini = (((maxi - (modpow(2, k) - 1) * 2) % MOD) + MOD) % MOD;
+    disjoint_set dsu(n);
+    for (int i = 0; i < n; i++) dsu.make_set(i);
 
-    cout << ((maxi + mini) / 2 + (MOD / 2)) % (MOD / 2) << endl;
+    int center = distance(ct.begin(), max_element(ct.begin(), ct.end()));
+    for (auto &[u, v] : edges) {
+        if (u == center or v == center) {
+            ans.pb({u, v});
+            dsu.make_union(u, v);
+        }
+    }
+
+    for (auto &[u, v] : edges) {
+        if (dsu.find_set(u) != dsu.find_set(v)) {
+            ans.pb({u, v});
+            dsu.make_union(u, v);
+        }
+    }
+
+    for (auto &[u, v] : ans) cout << u + 1 << " " << v + 1 << '\n';
 }
 
 /*
@@ -90,22 +116,4 @@ USE LONG LONG!!!!
        / |  ||   `""""~"`
      /'  |__||
            `o
-*/
-
-/*
-2
-0: 4
-   3 4
-1: 6 8 
-   5 6 7 8
-2: 10 12 14 16
-   9 10 11 12 13 14 15 16
-3: 18
-
-1
-0: 2
-   1 2
-1: 2 4
-   1 2 3 4
-2: 2 4 6 8
 */

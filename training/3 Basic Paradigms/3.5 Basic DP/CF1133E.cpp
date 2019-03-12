@@ -30,40 +30,41 @@ typedef queue<int> qi;
 
 mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
 
-const ll MOD = 2 * (1e9 + 7);
-
-ll modpow(ll x, ll y) 
-{ 
-    ll res = 1;      // Initialize result 
-    while (y > 0) 
-    { 
-        // If y is odd, multiply x with result 
-        if (y & 1) 
-            res = (res * x) % MOD; 
-  
-        // y must be even now 
-        y = y >> 1; // y = y/2 
-        x = (x * x) % MOD;   
-    } 
-    return res; 
-} 
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ll x, k;
-    cin >> x >> k;
+    int n, k;
+    cin >> n >> k;
+    vi a(n); for (auto &x : a) cin >> x;
+    sort(a.begin(), a.end());
 
-    if (x == 0) {
-        cout << 0 << endl;
-        return 0;
+    vi dp(n);
+    
+    int lo = 0, hi = 0;
+    while (lo != n) {
+        dp[hi] = max(dp[hi], hi - lo + 1);
+        if (hi != n - 1) {
+            if (a[hi + 1] - a[lo] <= 5) hi++;
+            else if (lo != hi) lo++;
+            else lo = (++hi);
+        }
+        else lo++;
     }
 
-    ll maxi = ((x % MOD) * modpow(2, k + 1)) % MOD;
-    ll mini = (((maxi - (modpow(2, k) - 1) * 2) % MOD) + MOD) % MOD;
+    vector<vi> dp2(n, vi(k, -1));
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < k; j++) {
+            if (j == 0) dp2[i][j] = dp[i];
+            else {
+                if (i - dp[i] >= 0) dp2[i][j] = max(dp2[i][j], dp[i] + dp2[i - dp[i]][j - 1]);
+                dp2[i][j] = max(dp2[i][j], dp2[i][j - 1]);
+            }
+            if (i > 0) dp2[i][j] = max(dp2[i][j], dp2[i - 1][j]);
+        }
+    }
 
-    cout << ((maxi + mini) / 2 + (MOD / 2)) % (MOD / 2) << endl;
+    cout << dp2[n - 1][k - 1] << endl;
 }
 
 /*
@@ -90,22 +91,4 @@ USE LONG LONG!!!!
        / |  ||   `""""~"`
      /'  |__||
            `o
-*/
-
-/*
-2
-0: 4
-   3 4
-1: 6 8 
-   5 6 7 8
-2: 10 12 14 16
-   9 10 11 12 13 14 15 16
-3: 18
-
-1
-0: 2
-   1 2
-1: 2 4
-   1 2 3 4
-2: 2 4 6 8
 */

@@ -30,40 +30,56 @@ typedef queue<int> qi;
 
 mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
 
-const ll MOD = 2 * (1e9 + 7);
-
-ll modpow(ll x, ll y) 
-{ 
-    ll res = 1;      // Initialize result 
-    while (y > 0) 
-    { 
-        // If y is odd, multiply x with result 
-        if (y & 1) 
-            res = (res * x) % MOD; 
-  
-        // y must be even now 
-        y = y >> 1; // y = y/2 
-        x = (x * x) % MOD;   
-    } 
-    return res; 
-} 
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ll x, k;
-    cin >> x >> k;
-
-    if (x == 0) {
-        cout << 0 << endl;
-        return 0;
+    int n;
+    cin >> n;
+    vector<vii> g(n);
+    for (int i = 0, u, v; i < n - 1; i++) {
+        cin >> u >> v, u--, v--;
+        g[u].pb({v, 1});
+        g[v].pb({u, 0});
     }
 
-    ll maxi = ((x % MOD) * modpow(2, k + 1)) % MOD;
-    ll mini = (((maxi - (modpow(2, k) - 1) * 2) % MOD) + MOD) % MOD;
+    vii cur;
+    
+    function<void(int, int)> dfs1 = [&](int u, int p) {
+        for (auto &v : g[u]) {
+            if (v.f == p) continue;
+            if (v.s == 0) cur.pb({u, v.f});
+            dfs1(v.f, u);
+        }
+    };
 
-    cout << ((maxi + mini) / 2 + (MOD / 2)) % (MOD / 2) << endl;
+    dfs1(0, -1);
+
+    int mini = cur.size(), curr = cur.size();
+    si ans;
+
+    function<void(int, int)> dfs2 = [&](int u, int p) {
+        if (curr < mini) {
+                mini = curr;
+                ans.clear();
+                ans.insert(u);
+        }
+        else if (curr <= mini) ans.insert(u);
+        for (auto &v : g[u]) {
+            if (v.f == p) continue;
+            if (v.s == 0) curr--;
+            else curr++;
+            dfs2(v.f, u);
+            if (v.s == 0) curr++;
+            else curr--;
+        }
+    };
+
+    dfs2(0, -1);
+
+    cout << mini << endl;
+    for (auto &x : ans) cout << x + 1 << " ";
+    cout << endl;
 }
 
 /*
@@ -90,22 +106,4 @@ USE LONG LONG!!!!
        / |  ||   `""""~"`
      /'  |__||
            `o
-*/
-
-/*
-2
-0: 4
-   3 4
-1: 6 8 
-   5 6 7 8
-2: 10 12 14 16
-   9 10 11 12 13 14 15 16
-3: 18
-
-1
-0: 2
-   1 2
-1: 2 4
-   1 2 3 4
-2: 2 4 6 8
 */

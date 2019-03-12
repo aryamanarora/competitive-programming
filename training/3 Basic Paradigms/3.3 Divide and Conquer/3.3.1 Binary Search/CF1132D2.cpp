@@ -30,40 +30,52 @@ typedef queue<int> qi;
 
 mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
 
-const ll MOD = 2 * (1e9 + 7);
-
-ll modpow(ll x, ll y) 
-{ 
-    ll res = 1;      // Initialize result 
-    while (y > 0) 
-    { 
-        // If y is odd, multiply x with result 
-        if (y & 1) 
-            res = (res * x) % MOD; 
-  
-        // y must be even now 
-        y = y >> 1; // y = y/2 
-        x = (x * x) % MOD;   
-    } 
-    return res; 
-} 
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ll x, k;
-    cin >> x >> k;
+    int n, k;
+    cin >> n >> k;
+    vl a(n); for (auto &x : a) cin >> x;
+    vl b(n); for (auto &x : b) cin >> x;
 
-    if (x == 0) {
-        cout << 0 << endl;
-        return 0;
+    auto cmp = [](pair<ll, ll> &a, pair<ll, ll> &b) {
+        return ((ld) a.f / (ld) a.s) > ((ld) b.f / (ld) b.s);
+    };
+
+    auto check = [&](ll val) {
+        cout << val << endl;
+        priority_queue<pair<ll, ll>, vector<pair<ll, ll>>, decltype(cmp)> pq(cmp);
+        for (int i = 0; i < n; i++) {
+            if (b[i] > 0 and (a[i] / b[i] + (a[i] % b[i] != 0) < k)) pq.push({a[i], b[i]});
+        }
+
+        ll t = 0;
+        while (!pq.empty()) {
+            if (t >= k) return false;
+            pair<ll, ll> cur = pq.top();
+            // cout << cur.f << " " << cur.s << endl;
+            pq.pop();
+            if (cur.f - t * cur.s < 0) return false;
+            cur.f += val;
+            cout << cur.f << " " << cur.s << ": " << (ld) cur.f / (ld) cur.s << endl;
+            if (((ld) cur.f / (ld) cur.s) < k - 1) pq.push(cur);
+            else cout << "popped" << endl;
+            t++;
+        }
+
+        return true;
+    };
+
+    ll lo = 0, hi = 1e18;
+    while (lo <= hi) {
+        ll mid = lo + (hi - lo) / 2LL;
+        if (check(mid)) hi = mid - 1;
+        else lo = mid + 1;
     }
 
-    ll maxi = ((x % MOD) * modpow(2, k + 1)) % MOD;
-    ll mini = (((maxi - (modpow(2, k) - 1) * 2) % MOD) + MOD) % MOD;
-
-    cout << ((maxi + mini) / 2 + (MOD / 2)) % (MOD / 2) << endl;
+    if (lo >= 1e18) cout << -1 << endl;
+    else cout << lo << endl;
 }
 
 /*
@@ -90,22 +102,4 @@ USE LONG LONG!!!!
        / |  ||   `""""~"`
      /'  |__||
            `o
-*/
-
-/*
-2
-0: 4
-   3 4
-1: 6 8 
-   5 6 7 8
-2: 10 12 14 16
-   9 10 11 12 13 14 15 16
-3: 18
-
-1
-0: 2
-   1 2
-1: 2 4
-   1 2 3 4
-2: 2 4 6 8
 */

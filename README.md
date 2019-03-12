@@ -17,6 +17,8 @@ Also included are solutions from programming contests.
     * Lazy propagation: ?
   * Cartesian Tree (useless):
     * [Template](https://github.com/aryamanarora/usaco/blob/master/training/2%20Data%20Structures/2.4%20Custom%20DS/2.4.5%20Cartesian%20Tree%20%26%20Treap/README.cpp)
+  * Heavy-Light Decomposition:
+    * [TIM1553](https://github.com/aryamanarora/usaco/blob/master/training/4%20Graphs/TIM1553.cpp)
 
 ## Scores
 

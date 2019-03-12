@@ -30,40 +30,27 @@ typedef queue<int> qi;
 
 mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
 
-const ll MOD = 2 * (1e9 + 7);
-
-ll modpow(ll x, ll y) 
-{ 
-    ll res = 1;      // Initialize result 
-    while (y > 0) 
-    { 
-        // If y is odd, multiply x with result 
-        if (y & 1) 
-            res = (res * x) % MOD; 
-  
-        // y must be even now 
-        y = y >> 1; // y = y/2 
-        x = (x * x) % MOD;   
-    } 
-    return res; 
-} 
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ll x, k;
-    cin >> x >> k;
+    int n; string s;
+    cin >> n >> s;
+    vector<vi> dp(n, vi(n, 0));
 
-    if (x == 0) {
-        cout << 0 << endl;
-        return 0;
+    for (int len = 0; len < n; len++) {
+        for (int i = 0; i < n - len; i++) {
+            int j = i + len;
+            if (i < j) dp[i][j] = 1 + dp[i + 1][j];
+            else dp[i][j] = 1;
+            for (int k = i + 1; k <= j; k++) {
+                if (s[i] == s[k]) dp[i][j] = min(dp[i][j], (i + 1 == k ? 0 : dp[i + 1][k - 1]) + dp[k][j]);
+            }
+            // cout << i << " " << j << ": " << dp[i][j] << endl;
+        }
     }
 
-    ll maxi = ((x % MOD) * modpow(2, k + 1)) % MOD;
-    ll mini = (((maxi - (modpow(2, k) - 1) * 2) % MOD) + MOD) % MOD;
-
-    cout << ((maxi + mini) / 2 + (MOD / 2)) % (MOD / 2) << endl;
+    cout << dp[0][n - 1] << endl;
 }
 
 /*
@@ -90,22 +77,4 @@ USE LONG LONG!!!!
        / |  ||   `""""~"`
      /'  |__||
            `o
-*/
-
-/*
-2
-0: 4
-   3 4
-1: 6 8 
-   5 6 7 8
-2: 10 12 14 16
-   9 10 11 12 13 14 15 16
-3: 18
-
-1
-0: 2
-   1 2
-1: 2 4
-   1 2 3 4
-2: 2 4 6 8
 */
