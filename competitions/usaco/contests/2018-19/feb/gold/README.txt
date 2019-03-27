@@ -1,25 +1,5 @@
-Data Structures:
-    Disjoint Set
-    Segment Tree
-    Binary-Indexed Tree (Fenwick)
-    STL stuff (Stack/Queue/Priority Queue)
+Data Structures: Disjoint Set, Segment Tree, Binary-Indexed Tree (Fenwick), STL stuff (Stack/Queue/Priority Queue)
 
-Algorithms:
-    Topological Sort
-    DFS/BFS (multisource BFS)
-    Dijkstra's (multisource also)
-    Floyd-Warshall
-    Kruskal's/Prim's (Minimum Spanning Tree)
-    Eulerian Tour?
-    Topological Sort
+Algorithms: Topological Sort, DFS/BFS (multisource BFS), Dijkstra's (multisource also), Floyd-Warshall, Kruskal's/Prim's (Minimum Spanning Tree), Eulerian Tour?, Topological Sort
 
-Techniques:
-    Greedy
-    Dynamic Programming
-        Knapsack
-        Coin Change
-    Two-pointer
-    Sliding window
-    Sweep line
-    Binary search
-    PIE
+Techniques: Greedy, Dynamic Programming,     Knapsack,     Coin Change, Two-pointer, Sliding window, Sweep line, Binary search, PIE

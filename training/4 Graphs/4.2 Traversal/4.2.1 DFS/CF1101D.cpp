@@ -34,75 +34,57 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int n, k;
-    cin >> n >> k;
+    int n;
+    cin >> n;
+    vi val(n); for (auto &x : val) cin >> x;
     vector<vi> g(n);
-    vi degree(n);
     for (int i = 0, u, v; i < n - 1; i++) {
         cin >> u >> v, u--, v--;
         g[u].push_back(v);
         g[v].push_back(u);
-        degree[u]++;
-        degree[v]++;
     }
 
-    queue<int> bfs;
-    for (int i = 0; i < n; i++) {
-        if (degree[i] == 1) bfs.push(i);
-    }
-
-    vi depth(n);
-    vi curdegree = degree;
-    vector<bool> vis(n);
-    while (!bfs.empty()) {
-        int u = bfs.front();
-        bfs.pop();
-        degree[u] = 0;
-        vis[u] = true;
+    vector<map<int, ii>> ct(n);
+    int ans = 0;
+    function<void(int, int)> dfs = [&](int u, int p) {
+        si pr;
+        for (int i = 2; i * i <= val[u]; i++) {
+            if (val[u] % i == 0) {
+                pr.insert(i);
+                ct[u][i] = {1, 1};
+                while (val[u] % i == 0) val[u] /= i;
+            }
+        }
+        if (val[u] != 1) {
+            pr.insert(val[u]);
+            ct[u][val[u]] = {1, 1};
+        }
         for (auto &v : g[u]) {
-            if (vis[v]) continue;
-            depth[v] = depth[u] + 1;
-            degree[v]--;
-            if (degree[v] == 1) {
-                bfs.push(v);
+            if (v == p) continue;
+            dfs(v, u);
+            for (auto &pri : pr) {
+                if (ct[v].count(pri)) {
+                    if (ct[v][pri].f + 1 >= ct[u][pri].f) {
+                        ct[u][pri].s = ct[u][pri].f;
+                        ct[u][pri].f = ct[v][pri].f + 1;
+                    }
+                    else if (ct[v][pri].f + 1 > ct[u][pri].s) {
+                        ct[u][pri].s = ct[v][pri].f + 1;
+                    }
+                }
             }
         }
-    }
+        // cout << u << endl;
+        for (auto &x : ct[u]) {
+            // cout << x.f << ": " << x.s.f << " " << x.s.s << endl;
+            ans = max(ans, x.s.f + x.s.s - 1);
+        }
+        // cout << endl;
+    };
 
-    map<int, vi> depths;
-    for (int i = 0; i < n; i++) {
-        // cout << i + 1 << ": " << depth[i] << " " << curdegree[i] << endl;
-        depths[depth[i]].push_back(i);
-        if (depth[i] > k) {
-            cout << "NO" << endl;
-            return 0;
-        }
-        else if (depth[i] == k) {
-            if (curdegree[i] < 3) {
-                cout << "NO" << endl;
-                return 0;
-            }
-        }
-        else if (depth[i] > 0 and curdegree[i] < 4) {
-            cout << "NO" << endl;
-            return 0;
-        }
-        for (auto &v : g[i]) {
-            if (abs(depth[i] - depth[v]) != 1) {
-                cout << "NO" << endl;
-                return 0;
-            }
-        }
-    }
+    dfs(0, -1);
 
-    for (int i = 0; i <= k; i++) {
-        if (depths[i].size() == 0) {
-            cout << "NO" << endl;
-            return 0;
-        }
-    }
-
-    cout << "YES" << endl;
+    cout << ans << endl;
 }
 
 /*

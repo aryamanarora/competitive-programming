@@ -30,79 +30,77 @@ typedef queue<int> qi;
 
 mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
 
+template<typename T>
+T least_significant_one(T x) {
+    return (x & (-x));
+}
+
+struct fenwick_tree {
+    int n;
+    vl freq;
+    fenwick_tree(int N) : n(N), freq(N + 1, 0) {};
+    ll sum(int a) {
+        ll res = 0;
+        for (; a; a -= least_significant_one(a)) res += freq[a];
+        return res;
+    }
+    ll sum(int a, int b) {
+        return (sum(b) - (a == 0 ? 0 : sum(a - 1)));
+    }
+    void add(int a, int v) {
+        for (; a <= n; a += least_significant_one(a)) {
+            freq[a] += v;
+        }
+    }
+};
+
+int ct = 0;
+void dfs(int u, int p, vi &start, vi &end, vector<vi> &g) {
+    start[u] = ct++;
+    for (auto &v : g[u]) {
+        if (v == p) continue;
+        dfs(v, u, start, end, g);
+    }
+    end[u] = ct - 1;
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int n, k;
-    cin >> n >> k;
+    int n, q;
+    cin >> n >> q;
+    vi val(n); for (auto &x : val) cin >> x;
+
     vector<vi> g(n);
-    vi degree(n);
     for (int i = 0, u, v; i < n - 1; i++) {
         cin >> u >> v, u--, v--;
         g[u].push_back(v);
         g[v].push_back(u);
-        degree[u]++;
-        degree[v]++;
     }
 
-    queue<int> bfs;
+    vi start(n), end(n);
+    dfs(0, -1, start, end, g);
+
+    fenwick_tree ft(ct);
     for (int i = 0; i < n; i++) {
-        if (degree[i] == 1) bfs.push(i);
+        ft.add(start[i] + 1, val[i]);
     }
 
-    vi depth(n);
-    vi curdegree = degree;
-    vector<bool> vis(n);
-    while (!bfs.empty()) {
-        int u = bfs.front();
-        bfs.pop();
-        degree[u] = 0;
-        vis[u] = true;
-        for (auto &v : g[u]) {
-            if (vis[v]) continue;
-            depth[v] = depth[u] + 1;
-            degree[v]--;
-            if (degree[v] == 1) {
-                bfs.push(v);
-            }
+    while (q--) {
+        int qq; cin >> qq;
+        if (qq == 1) {
+            int s, x; cin >> s >> x;
+            s--;
+            ft.add(start[s] + 1, x - val[s]);
+            val[s] = x;
+        }
+        else {
+            int s; cin >> s;
+            s--;
+            cout << ft.sum(start[s] + 1, end[s] + 1) << endl;
         }
     }
-
-    map<int, vi> depths;
-    for (int i = 0; i < n; i++) {
-        // cout << i + 1 << ": " << depth[i] << " " << curdegree[i] << endl;
-        depths[depth[i]].push_back(i);
-        if (depth[i] > k) {
-            cout << "NO" << endl;
-            return 0;
-        }
-        else if (depth[i] == k) {
-            if (curdegree[i] < 3) {
-                cout << "NO" << endl;
-                return 0;
-            }
-        }
-        else if (depth[i] > 0 and curdegree[i] < 4) {
-            cout << "NO" << endl;
-            return 0;
-        }
-        for (auto &v : g[i]) {
-            if (abs(depth[i] - depth[v]) != 1) {
-                cout << "NO" << endl;
-                return 0;
-            }
-        }
-    }
-
-    for (int i = 0; i <= k; i++) {
-        if (depths[i].size() == 0) {
-            cout << "NO" << endl;
-            return 0;
-        }
-    }
-
-    cout << "YES" << endl;
 }
 
 /*

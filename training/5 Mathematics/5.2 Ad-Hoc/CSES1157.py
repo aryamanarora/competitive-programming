@@ -1,0 +1,1 @@
+print(reduce(xor, map(int,input().split()), 0))
