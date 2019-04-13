@@ -30,51 +30,60 @@ typedef queue<int> qi;
 
 mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
 
-unsigned long long cost(unsigned long long a) {
-    unsigned long long res = 0;
-    for (unsigned long long i = 1; i <= a; i *= 10) {
-        if (a < i * 2) res += a - i + 1;
-        else res += ((a / i) / 10 + (a - (a / i) / 10 ? 1 : 0)) * i;
+const ll MOD = 1e9 + 7;
+
+ll modpow(ll x, ll y) { 
+    ll res = 1;
+    while (y) {
+        if (y % 2) res = (res * x) % MOD;
+        y /= 2;
+        x = (x * x) % MOD;
     }
-    return res;
+    return res; 
+}
+
+map<int, int> memo = {{1, 1}};
+ll calc(ll sum) {
+    if (memo.count(sum)) return memo[sum];
+    ll ans = modpow(2, sum - 1) - 1;
+    for (int i = 2; i * i <= sum; i++) {
+        if (sum % i == 0) {
+            ans = (ans + MOD - calc(sum / i)) % MOD;
+            if (i * i != sum) ans = (ans + MOD - calc(sum / (sum / i))) % MOD;
+        }
+    }
+    return memo[sum] = (ans % MOD);
 }
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    unsigned long long n;
-    cin >> n;
-    
-    unsigned long long lo = 1, hi = numeric_limits<ll>::max();
-    while (lo <= hi) {
-        unsigned long long mid = lo + (hi - lo) / 2;
-        if (cost(mid) > n) hi = mid - 1;
-        else lo = mid + 1;
+    ll x, y;
+    cin >> x >> y;
+    if (y % x) {
+        cout << 0 << endl;
+        return 0;
     }
 
-    cout << hi << endl;
+    cout << calc(y / x) << endl;
 }
 
 /*
 USE LONG LONG!!!!
 
-1000000
-9: 1
-99: 20
-999: 300
-9999: 4000
-99999: 50000
-999999: 600000
+0 1 2 3 4 5 6
+1 1 2 4 8 16
 
-99:
-    9x: 10
-     9: 10
-
-999:
-    9xx: 100
-     9x: 10*10 = 100
-      9: 100*1 = 100
+4
+1 1 1 1 : 1
+2 1 1   : 1
+1 2 1   : 1
+1 1 2   : 1
+2 2     : 2
+3 1     : 1
+1 3     : 1
+4       : 4
 
 :pray: :fishy15:
 :pray: :summitosity:

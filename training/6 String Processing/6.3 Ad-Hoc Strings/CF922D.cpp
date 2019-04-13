@@ -28,53 +28,50 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
-mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
+mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count() << 1);
 
-unsigned long long cost(unsigned long long a) {
-    unsigned long long res = 0;
-    for (unsigned long long i = 1; i <= a; i *= 10) {
-        if (a < i * 2) res += a - i + 1;
-        else res += ((a / i) / 10 + (a - (a / i) / 10 ? 1 : 0)) * i;
-    }
-    return res;
-}
+const int INF = numeric_limits<int>::max();
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    unsigned long long n;
+    int n;
     cin >> n;
-    
-    unsigned long long lo = 1, hi = numeric_limits<ll>::max();
-    while (lo <= hi) {
-        unsigned long long mid = lo + (hi - lo) / 2;
-        if (cost(mid) > n) hi = mid - 1;
-        else lo = mid + 1;
+    vector<pair<string, int>> a(n);
+    vl score(n), s(n), h(n);
+    for (int i = 0; i < n; i++) {
+        cin >> a[i].f;
+        a[i].s = i;
+        ll ct = 0;
+        for (auto &y : a[i].f) {
+            if (y == 's') ct++;
+            else score[i] += ct;
+        }
+        s[i] = ct;
+        h[i] = a[i].f.length() - ct;
+    }
+    sort(a.begin(), a.end(), [&](const auto &a, const auto &b) {
+        ll sa = score[a.s] + h[b.s] * s[a.s] + score[b.s];
+        ll sb = score[b.s] + h[a.s] * s[b.s] + score[a.s];
+        // cout << a.f << " " << b.f << ": " << sa << " " << sb << endl;
+        return sb < sa;
+    });
+
+    ll ans = 0;
+    ll ct = 0;
+    for (auto &x : a) {
+        for (auto &y : x.f) {
+            if (y == 's') ct++;
+            else ans += ct;
+        }
     }
 
-    cout << hi << endl;
+    cout << ans << endl;
 }
 
 /*
 USE LONG LONG!!!!
-
-1000000
-9: 1
-99: 20
-999: 300
-9999: 4000
-99999: 50000
-999999: 600000
-
-99:
-    9x: 10
-     9: 10
-
-999:
-    9xx: 100
-     9x: 10*10 = 100
-      9: 100*1 = 100
 
 :pray: :fishy15:
 :pray: :summitosity:

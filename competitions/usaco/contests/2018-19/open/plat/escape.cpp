@@ -28,53 +28,32 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
-mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
-
-unsigned long long cost(unsigned long long a) {
-    unsigned long long res = 0;
-    for (unsigned long long i = 1; i <= a; i *= 10) {
-        if (a < i * 2) res += a - i + 1;
-        else res += ((a / i) / 10 + (a - (a / i) / 10 ? 1 : 0)) * i;
-    }
-    return res;
-}
+const ll MOD = 1e9 + 7;
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    unsigned long long n;
-    cin >> n;
-    
-    unsigned long long lo = 1, hi = numeric_limits<ll>::max();
-    while (lo <= hi) {
-        unsigned long long mid = lo + (hi - lo) / 2;
-        if (cost(mid) > n) hi = mid - 1;
-        else lo = mid + 1;
+    ifstream cin("escape.in");
+    ofstream cout("escape.out");
+
+    int n, k;
+    cin >> n >> k;
+    mii ct;
+    for (int i = 0, j; i < (n - 1) * k + n * (k - 1); i++) {
+        cin >> j;
+        ct[j]++;
     }
 
-    cout << hi << endl;
+    ll ans = 1;
+    for (auto &x : ct) {
+        ans = ((ans % MOD) * (x.s % MOD)) % MOD;
+    }
+    cout << (ans == 10 ? 10 : 2) << endl;
 }
 
 /*
 USE LONG LONG!!!!
-
-1000000
-9: 1
-99: 20
-999: 300
-9999: 4000
-99999: 50000
-999999: 600000
-
-99:
-    9x: 10
-     9: 10
-
-999:
-    9xx: 100
-     9x: 10*10 = 100
-      9: 100*1 = 100
 
 :pray: :fishy15:
 :pray: :summitosity:

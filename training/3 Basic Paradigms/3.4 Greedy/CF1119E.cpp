@@ -30,51 +30,44 @@ typedef queue<int> qi;
 
 mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
 
-unsigned long long cost(unsigned long long a) {
-    unsigned long long res = 0;
-    for (unsigned long long i = 1; i <= a; i *= 10) {
-        if (a < i * 2) res += a - i + 1;
-        else res += ((a / i) / 10 + (a - (a / i) / 10 ? 1 : 0)) * i;
-    }
-    return res;
-}
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    unsigned long long n;
+    int n;
     cin >> n;
-    
-    unsigned long long lo = 1, hi = numeric_limits<ll>::max();
-    while (lo <= hi) {
-        unsigned long long mid = lo + (hi - lo) / 2;
-        if (cost(mid) > n) hi = mid - 1;
-        else lo = mid + 1;
+    vi a(n);
+    for (auto &x : a) cin >> x;
+
+    si two;
+    for (int i = 0; i < n; i++) if (a[i] >= 2) two.insert(i);
+
+    ll ans = 0;
+    for (int i = 0; i < n; i++) {
+        if (a[i] >= 3) {
+            ans += a[i] / 3;
+            a[i] %= 3;
+        }
+        two.erase(i);
+        if (a[i]) {
+            for (auto it = two.begin(); it != two.end();) {
+                int j = *it;
+                int make = min(a[i], a[j] / 2);
+                a[i] -= make;
+                a[j] -= make * 2;
+                if (a[j] < 2) it = two.erase(it);
+                else it++;
+                ans += make;
+                if (a[i] == 0) break;
+            }
+        }
     }
 
-    cout << hi << endl;
+    cout << ans << endl;
 }
 
 /*
 USE LONG LONG!!!!
-
-1000000
-9: 1
-99: 20
-999: 300
-9999: 4000
-99999: 50000
-999999: 600000
-
-99:
-    9x: 10
-     9: 10
-
-999:
-    9xx: 100
-     9x: 10*10 = 100
-      9: 100*1 = 100
 
 :pray: :fishy15:
 :pray: :summitosity:

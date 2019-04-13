@@ -30,51 +30,38 @@ typedef queue<int> qi;
 
 mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
 
-unsigned long long cost(unsigned long long a) {
-    unsigned long long res = 0;
-    for (unsigned long long i = 1; i <= a; i *= 10) {
-        if (a < i * 2) res += a - i + 1;
-        else res += ((a / i) / 10 + (a - (a / i) / 10 ? 1 : 0)) * i;
-    }
-    return res;
-}
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    unsigned long long n;
+    int n;
     cin >> n;
-    
-    unsigned long long lo = 1, hi = numeric_limits<ll>::max();
-    while (lo <= hi) {
-        unsigned long long mid = lo + (hi - lo) / 2;
-        if (cost(mid) > n) hi = mid - 1;
-        else lo = mid + 1;
+    set<ll> a;
+    for (ll i = 0, j; i < n; i++) {
+        cin >> j;
+        a.insert(j);
     }
 
-    cout << hi << endl;
+    ll maxd = *a.rbegin() - *a.begin();
+    vl ans = {*a.begin()};
+    for (auto &x : a) {
+        for (ll diff = 1; diff <= maxd; diff *= 2) {
+            if (a.count(x + diff) and a.count(x + 2 * diff)) {
+                ans = {x, x + diff, x + 2 * diff};
+            }
+            else if (a.count(x + diff)) {
+                if (ans.size() < 2) ans = {x, x + diff};
+            }
+        }
+    }
+
+    cout << ans.size() << endl;
+    for (auto &x : ans) cout << x << " ";
+    cout << endl;
 }
 
 /*
 USE LONG LONG!!!!
-
-1000000
-9: 1
-99: 20
-999: 300
-9999: 4000
-99999: 50000
-999999: 600000
-
-99:
-    9x: 10
-     9: 10
-
-999:
-    9xx: 100
-     9x: 10*10 = 100
-      9: 100*1 = 100
 
 :pray: :fishy15:
 :pray: :summitosity:

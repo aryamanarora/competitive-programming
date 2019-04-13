@@ -28,7 +28,7 @@ typedef queue<int> qi;
 #define f first
 #define s second
 
-const ll MOD = 1000000007;
+const ll MOD = 1e9 + 7;
 
 // square matrix
 template<typename T>
@@ -60,24 +60,24 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    ll n, m;
-    cin >> n >> m;
+    ll n;
+    cin >> n;
 
-    if (n < m) {
-        cout << 1 << endl;
+    if (n <= 6) {
+        cout << static_cast<int>(pow(2, n - 1)) << endl;
         return 0;
     }
 
-    Matrix<ll> mat(m);
-    mat[0][0] = mat[0][m - 1] = 1;
-    for (int i = 1; i < m; i++) {
+    Matrix<ll> mat(6);
+    for (int i = 0; i < 6; i++) mat[0][i] = 1;
+    for (int i = 1; i < 6; i++) {
         mat[i][i - 1] = 1;
     }
 
-    Matrix<ll> res(m);
+    Matrix<ll> res(6);
     res.mat = mat.mat;
 
-    ll p = n - m;
+    ll p = n - 7;
     while (p > 0) {
         if (p % 2) res *= mat;
         p /= 2;
@@ -85,12 +85,24 @@ int main() {
     }
 
     ll ans = 0;
-    for (auto &x : res.mat[0]) ans = (ans + x) % MOD;
+    ans = (ans + (32 * res[0][0]) % MOD) % MOD;
+    ans = (ans + (16 * res[0][1]) % MOD) % MOD;
+    ans = (ans + (8  * res[0][2]) % MOD) % MOD;
+    ans = (ans + (4  * res[0][3]) % MOD) % MOD;
+    ans = (ans + (2  * res[0][4]) % MOD) % MOD;
+    ans = (ans + (1  * res[0][5]) % MOD) % MOD;
     cout << ans << endl;
 }
 
 /*
 USE LONG LONG!!!!
+
+1 1 1 1 1 1  32
+1 0 0 0 0 0  16
+0 1 0 0 0 0  8
+0 0 1 0 0 0  4
+0 0 0 1 0 0  2
+0 0 0 0 1 0  1
 
 :pray: :fishy15:
 :pray: :summitosity:

@@ -30,51 +30,58 @@ typedef queue<int> qi;
 
 mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
 
-unsigned long long cost(unsigned long long a) {
-    unsigned long long res = 0;
-    for (unsigned long long i = 1; i <= a; i *= 10) {
-        if (a < i * 2) res += a - i + 1;
-        else res += ((a / i) / 10 + (a - (a / i) / 10 ? 1 : 0)) * i;
-    }
-    return res;
-}
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    unsigned long long n;
+    int n;
     cin >> n;
-    
-    unsigned long long lo = 1, hi = numeric_limits<ll>::max();
-    while (lo <= hi) {
-        unsigned long long mid = lo + (hi - lo) / 2;
-        if (cost(mid) > n) hi = mid - 1;
-        else lo = mid + 1;
+
+    vi all;
+    int ans = 6;
+    for (int i = 4; i < 100; i++) {
+        all.push_back(ans / 6);
+        ans = (ans * i) / (i - 3);
     }
 
-    cout << hi << endl;
+    int p = 0;
+    vector<vi> g(100, vi(100));
+    for (int i = all.size() - 1; i >= 0; i--) {
+        if (all[i] <= n) {
+            for (int j = 0; j < i + 3; j++) {
+                for (int k = 0; k < i + 3; k++) {
+                    if (j != k) g[j][k] = 1;
+                }
+            }
+            n -= all[i];
+            p = i + 3;
+            break;
+        }
+    }
+
+    for (int i = all.size() - 2; i >= 0; i--) all[i + 1] -= all[i];
+    while (n) {
+        for (int i = all.size() - 1; i >= 0; i--) {
+            if (all[i] <= n) {
+                for (int j = p; j > p - i - 3; j--) {
+                    if (j != p) g[j][p] = g[p][j] = 1;
+                }
+                n -= all[i];
+                p++;
+                break;
+            }
+        }
+    }
+
+    cout << p << endl;
+    for (int i = 0; i < p; i++) {
+        for (int j = 0; j < p; j++) cout << g[i][j];
+        cout << endl;
+    }
 }
 
 /*
 USE LONG LONG!!!!
-
-1000000
-9: 1
-99: 20
-999: 300
-9999: 4000
-99999: 50000
-999999: 600000
-
-99:
-    9x: 10
-     9: 10
-
-999:
-    9xx: 100
-     9x: 10*10 = 100
-      9: 100*1 = 100
 
 :pray: :fishy15:
 :pray: :summitosity:

@@ -32,6 +32,17 @@ mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
 
 const ll MOD = 1e9 + 7;
 
+ll mulmod(ll a, ll b) {
+    ll res = 0;
+    a %= MOD;
+    while (b > 0) {
+        if (b % 2) res = (res + a) % MOD;
+        a = (a * 2) % MOD;
+        b /= 2;
+    }
+    return res % MOD;
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
@@ -47,11 +58,9 @@ int main() {
         ct--;
         ll start = i + 1, end = ct + 1;
         if (start <= end) {
-            ans += ((end * (end + 1)) / 2) % MOD;
-            ans %= MOD;
-            ans = (ans + MOD - (((start - 1) * start) / 2 % MOD)) % MOD;
+            ans = (ans + (end % 2 ? mulmod(end, (end + 1) / 2) : mulmod(end / 2, end + 1))) % MOD;
+            ans = (ans + MOD - (start % 2 ? mulmod(start, (start- 1) / 2) : mulmod(start / 2, start - 1))) % MOD;
         }
-        // cout << i << ": " << start << " " << end << endl;
     }
 
     cout << ans << endl;
@@ -59,6 +68,9 @@ int main() {
 
 /*
 USE LONG LONG!!!!
+
+1 1 1 1 1 1 1
+ (2)  2   2
 
 :pray: :fishy15:
 :pray: :summitosity:

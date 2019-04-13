@@ -30,51 +30,47 @@ typedef queue<int> qi;
 
 mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
 
-unsigned long long cost(unsigned long long a) {
-    unsigned long long res = 0;
-    for (unsigned long long i = 1; i <= a; i *= 10) {
-        if (a < i * 2) res += a - i + 1;
-        else res += ((a / i) / 10 + (a - (a / i) / 10 ? 1 : 0)) * i;
-    }
-    return res;
-}
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    unsigned long long n;
-    cin >> n;
-    
-    unsigned long long lo = 1, hi = numeric_limits<ll>::max();
-    while (lo <= hi) {
-        unsigned long long mid = lo + (hi - lo) / 2;
-        if (cost(mid) > n) hi = mid - 1;
-        else lo = mid + 1;
+    int n, k;
+    cin >> n >> k;
+    vi degree(n); vector<vii> g(n);
+    for (int i = 0, u, v; i < n - 1; i++) {
+        cin >> u >> v, u--, v--;
+        g[u].push_back({v, i});
+        g[v].push_back({u, i});
+        degree[u]++, degree[v]++;
     }
 
-    cout << hi << endl;
+    vii d(n);
+    for (int i = 0; i < n; i++) d[i] = {degree[i], i};
+    sort(d.rbegin(), d.rend());
+
+    int need = (k == n ? 0 : d[k].f);
+    cout << need << endl;
+
+    vi ans(n - 1);
+    function<void(int, int, int)> dfs = [&](int u, int p, int used) {
+        int c = 1;
+        for (int i = 0; i < g[u].size(); i++) {
+            int v = g[u][i].f, id = g[u][i].s;
+            if (v == p) continue;
+            if (c == used) c = min(c + 1, need);
+            ans[id] = c;
+            dfs(v, u, c);
+            c = min(c + 1, need);
+        }
+    };
+
+    dfs(0, -1, -1);
+    for (auto &x : ans) cout << x << " ";
+    cout << endl;
 }
 
 /*
 USE LONG LONG!!!!
-
-1000000
-9: 1
-99: 20
-999: 300
-9999: 4000
-99999: 50000
-999999: 600000
-
-99:
-    9x: 10
-     9: 10
-
-999:
-    9xx: 100
-     9x: 10*10 = 100
-      9: 100*1 = 100
 
 :pray: :fishy15:
 :pray: :summitosity:
