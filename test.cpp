@@ -30,36 +30,48 @@ typedef queue<int> qi;
 
 mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
 
+const int INF = numeric_limits<int>::max();
+
+void solve() {
+    int n;
+    cin >> n;
+    vi a(n);
+    for (auto &x : a) cin >> x;
+    set<ii> l, r;
+    for (int i = 2; i < n; i++) r.insert({a[i], i});
+
+    int ans = 0; ii res;
+    for (int i = 0; i < n; i++) {
+        if (i < n - 2) {
+            if (a[i] + prev(r.end())->f > ans) {
+                ans = a[i] + prev(r.end())->f;
+                res = {a[i], prev(r.end())->f};
+            }
+        }
+        if (i > 1) {
+            if (a[i] + prev(l.end())->f > ans) {
+                ans = a[i] + prev(l.end())->f;
+                res = {a[i], prev(l.end())->f};
+            }
+        }
+        if (i < n - 2) r.erase({a[i + 2], i + 2});
+        if (i > 1) l.insert({a[i - 2], i - 2});
+        if (a[i] > ans) {
+            ans = a[i];
+            res = {a[i], INF};
+        }
+    }
+
+    cout << min(res.f, res.s) << (max(res.f, res.s) == INF ? "" : to_string(max(res.f, res.s)))  << endl;
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int a, b;
-    cout << "Number of black alleles: ";
-    cin >> a;
-    cout << endl;
-    cout << "Number of brown alleles: ";
-    cin >> b;
-    cout << endl;
-
-    vector<int> genes;
-    for (int i = 0; i < a; i++) genes.push_back(1);
-    for (int i = 0; i < b; i++) genes.push_back(2);
-    shuffle(genes.begin(), genes.end(), rng);
-
-    uniform_int_distribution<> gen(0, a + b);
-
-    int BB = 0, Bb = 0, bb = 0;
-    for (int i = 0; i < 50; i++) {
-        int x = gen(rng), y = gen(rng);
-        if (genes[x] == 1 and genes[y] == 1) BB++;
-        else if (genes[x] == 2 and genes[y] == 2) bb++;
-        else Bb++;
-    }
-
-    cout << "2 black: " << BB << endl;
-    cout << "1 black 1 brown: " << Bb << endl;
-    cout << "2 brown: " << bb << endl;
+    int t;
+    cin >> t;
+    while (t--) solve();
 }
 
 /*

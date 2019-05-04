@@ -34,18 +34,15 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int n, k;
-    cin >> n >> k;
+    int n,k;
+    cin>>n>>k;
     
-    ll lo = 1, hi = 0;
+    ll l=1,h=0;
     vl a(n);
-    for (auto &x : a) {
-        cin >> x;
-        hi += x;
-    }
+    for (ll&x:a){cin>>x;h+=x;}
 
-    auto check = [&](ll val) {
-        ll cur = 0, ct = 1;
+    auto check=[&](ll v) {
+        ll c=0,e=1;
         for (auto &x : a) {
             if (cur + x <= val) cur += x;
             else if (x > val) return false;
